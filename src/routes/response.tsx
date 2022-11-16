@@ -1,4 +1,4 @@
-import Editor, { DiffEditor, useMonaco } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { getResponse } from "../models/responses";
 
@@ -20,7 +20,7 @@ const editorMarkers: any = [
 
 export default function ResponseElement() {
   const loaderData = useLoaderData();
-  console.log(loaderData)
+  console.log(loaderData);
   return (
     <>
       <div className="response-info grid-item"></div>

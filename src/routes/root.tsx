@@ -6,7 +6,7 @@ import {
   redirect,
   useLoaderData,
 } from "react-router-dom";
-import { createRequest, getRequests } from "../domain/requests";
+import { createRequest, getRequests } from "../models/requests";
 
 export async function loader() {
   return await getRequests();

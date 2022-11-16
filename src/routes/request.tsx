@@ -14,8 +14,8 @@ import {
 import qs from "qs";
 
 import CtxFieldPairs from "../components/ctx-field-pairs";
-import { deleteRequest, getRequest, updateRequest } from "../domain/requests";
-import { createResponse, getLatestResponse } from "../domain/responses";
+import { deleteRequest, getRequest, updateRequest } from "../models/requests";
+import { createResponse, getLatestResponse } from "../models/responses";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const { requestId } = params;

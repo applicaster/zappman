@@ -1,6 +1,6 @@
 import Editor, { DiffEditor, useMonaco } from "@monaco-editor/react";
 import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
-import { getResponse } from "../domain/responses";
+import { getResponse } from "../models/responses";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { responseId } = params;

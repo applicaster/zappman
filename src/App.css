@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.app {
+  height: 100vh;
+  display: grid;
+  grid-gap: 1px;
+  background-color: rgb(193, 192, 192);
+
+  grid-template-areas:
+    "header header header"
+    "menu requestUrl responseInfo"
+    "menu requestDetails responseDetails";
+  grid-template-columns: 2fr 5fr 4fr;
+  grid-template-rows: auto auto 1fr;
+}
+
+.grid-item {
+  background-color: white;
+}
+
+header {
+  grid-area: header;
+}
+
+#menu {
+  grid-area: menu;
+}
+
+.request-url {
+  grid-area: requestUrl;
+}
+
+.response-info {
+  grid-area: responseInfo;
+}
+
+.request-details {
+  grid-area: requestDetails;
+}
+
+.response-details {
+  grid-area: responseDetails;
+}

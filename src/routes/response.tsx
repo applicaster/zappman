@@ -3,7 +3,8 @@ import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { getResponse } from "../domain/responses";
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  return json({ response: await getResponse(params.responseId) });
+  const {responseId} = params;
+  return json({ responseData: await getResponse(responseId) , responseId});
 }
 
 const editorMarkers: any = [
@@ -22,7 +23,7 @@ export default function ResponseElement() {
   return (
     <>
       <div className="response-info grid-item"></div>
-      <div className="response-details grid-item">
+      <div className="response-details grid-item" >
         <Editor
           options={{ readOnly: true, renderValidationDecorations: "on" }}
           onMount={(editor, monaco) => {
@@ -32,7 +33,7 @@ export default function ResponseElement() {
           }}
           theme="vs-light"
           language="json"
-          value={JSON.stringify(loaderData?.response || {}, null, 2)}
+          value={JSON.stringify(loaderData?.responseData || {}, null, 2)}
         />
       </div>
     </>

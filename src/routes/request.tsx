@@ -45,7 +45,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const { requestId, responseId } = params;
   if (!responseId) {
     const latestResponse = await getLatestResponse(requestId);
-    if (latestResponse.id) {
+    if (latestResponse?.id) {
       return redirect(`/requests/${requestId}/responses/${latestResponse.id}`);
     }
   }

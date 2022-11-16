@@ -24,9 +24,12 @@ export async function getResponse(responseId) {
 export async function getLatestResponse(requestId) {
   const responses = [];
   await responsesStore.iterate((value, key, iterationNumber) => {
-    responses.push(value);
+    console.log(value.requestId, '---', requestId)
+    if (requestId === value.requestId) {
+      responses.push(value);
+    }
   });
-  if (responses && responses.length > 0) {
+  if (responses.length > 0) {
     return responses.sort((a, b) => b.createdAt - a.createdAt)[0];
   }
   return null;

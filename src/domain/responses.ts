@@ -6,15 +6,49 @@ const responsesStore = localforage.createInstance({
 });
 
 export async function createResponse(requestId) {
-  const request = await getRequest(requestId);
-  const response = await fetch(request.url);
   const responseId = nanoid(9);
-  return responsesStore.setItem(responseId, {
-    id: responseId,
-    requestId,
-    createdAt: Date.now(),
-    data: await response.json(),
-  });
+
+  const request = await getRequest(requestId);
+  try {
+    const response = await fetch(request.url);
+    const data = await response.json();
+    return responsesStore.setItem(responseId, {
+      id: responseId,
+      requestId,
+      createdAt: Date.now(),
+      data,
+    });
+  } catch (error) {
+    return responsesStore.setItem(responseId, {
+      id: responseId,
+      requestId,
+      createdAt: Date.now(),
+      error : error?.message || error.toString(),
+    });
+  }
+
+  // let data;
+  // const response = await fetch(request.url).catch((e) => {
+  //   console.log("--");
+  //   return responsesStore.setItem(responseId, {
+  //     id: responseId,
+  //     requestId,
+  //     createdAt: Date.now(),
+
+  //     error: "error",
+  //   });
+  // });
+  // console.log(response);
+
+  // try {
+  //   data = await response.json();
+  // } catch (error) {}
+  // return responsesStore.setItem(responseId, {
+  //   id: responseId,
+  //   requestId,
+  //   createdAt: Date.now(),
+  //   data,
+  // });
 }
 
 export async function getResponse(responseId) {
@@ -24,7 +58,6 @@ export async function getResponse(responseId) {
 export async function getLatestResponse(requestId) {
   const responses = [];
   await responsesStore.iterate((value, key, iterationNumber) => {
-    console.log(value.requestId, '---', requestId)
     if (requestId === value.requestId) {
       responses.push(value);
     }

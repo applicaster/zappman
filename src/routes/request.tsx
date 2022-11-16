@@ -1,4 +1,56 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import {
+  ActionFunctionArgs,
+  Form,
+  json,
+  Link,
+  LoaderFunctionArgs,
+  Outlet,
+  redirect,
+  useFetcher,
+  useLoaderData,
+  useLocation,
+  useParams,
+} from "react-router-dom";
+import qs from "qs";
+
+import CtxFieldPairs from "../components/ctx-field-pairs";
+import { deleteRequest, getRequest, updateRequest } from "../domain/requests";
+import { createResponse, getLatestResponse } from "../domain/responses";
+
+export async function action({ request, params }: ActionFunctionArgs) {
+  const { requestId } = params;
+  const text = await request.text();
+
+  const req: any = qs.parse(text, {
+    /* @ts-expect-error - the library has wrong typings */
+    allowSparse: true,
+  });
+
+  const actionType = req["action-type"];
+  if (actionType === "delete") {
+    await deleteRequest(requestId);
+    return redirect("/");
+  }
+  if (actionType === "update") {
+    await updateRequest(requestId, req);
+    return json({});
+  }
+  if (actionType === "send") {
+    const response = await createResponse(requestId);
+    return redirect(`/requests/${requestId}/responses/${response.id}`);
+  }
+}
+
+export async function loader({ params }: LoaderFunctionArgs) {
+  const { requestId, responseId } = params;
+  if (!responseId) {
+    const latestResponse = await getLatestResponse(requestId);
+    if (latestResponse.id) {
+      return redirect(`/requests/${requestId}/responses/${latestResponse.id}`);
+    }
+  }
+  return json({ request: await getRequest(requestId) });
+}
 
 const Tab = ({ isActive, to, children }: any) => {
   return (
@@ -9,29 +61,77 @@ const Tab = ({ isActive, to, children }: any) => {
 };
 
 export default function RequestElement() {
+  const { requestId } = useParams();
+  const { request } = useLoaderData();
+
+  const fetcher = useFetcher();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const activeTab = searchParams.get("activeTab");
+  const handleChange = (e) => {
+    const target = e.target as HTMLInputElement;
+    fetcher.submit(
+      {
+        id: requestId,
+        [target.name]:
+          target.type === "checkbox" ? target.checked : target.value,
+        "action-type": "update",
+      },
+      { method: "post" }
+    );
+  };
   return (
     <>
-      <div className="request-url grid-item">
+      <fetcher.Form
+        key={`1-${requestId}`}
+        method="post"
+        onChange={handleChange}
+        className="request-url grid-item"
+      >
         <div className="form-control">
           <div className="input-group">
             <select className="select select-bordered">
               <option>GET</option>
               <option>POST</option>
             </select>
-            <input type="text" className="input input-bordered w-full" />
-            <button className="btn  last:rounded-r-sm">Send</button>
+            <input
+              type="text"
+              className="input input-bordered w-full"
+              name="url"
+              defaultValue={request?.url}
+            />
+            <button
+              className="btn last:rounded-r-sm"
+              type="submit"
+              name="action-type"
+              value="send"
+            >
+              Send
+            </button>
           </div>
         </div>
-      </div>
-      <div className="request-details grid-item p-2 ">
-        <div className="mb-2 ">
+      </fetcher.Form>
+      <fetcher.Form
+        key={`2-${requestId}`}
+        method="post"
+        onChange={handleChange}
+        className="request-details grid-item p-2"
+      >
+        <div className="mb-2">
+          <button
+            className="btn btn-xs btn-outline float-right"
+            type="submit"
+            name="action-type"
+            value="delete"
+          >
+            Delete
+          </button>
           <h2 className="mb-2 font-semibold">General Settings</h2>
           <input
+            name="title"
+            defaultValue={request?.title}
             type="text"
-            placeholder="Request Title"
+            placeholder="New Request"
             className="input input-sm input-bordered  w-full "
           />
         </div>
@@ -54,35 +154,16 @@ export default function RequestElement() {
           </Tab>
         </div>
         {(activeTab === "ctx" || !activeTab) && (
-          <div className="flex gap-4">
-            <div className="form-control flex-1 ">
-              <label className="label">
-                <span className="label-text">Key</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Type here"
-                className="input input-sm input-bordered w-full "
-              />
-            </div>
-            <div className="form-control flex-1 ">
-              <label className="label">
-                <span className="label-text">Rename</span>
-              </label>
-              <label className="input-group">
-                <span>
-                  <input type="checkbox" className="checkbox checkbox-xs" />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Type here"
-                  className="input input-bordered input-sm w-full"
-                />
-              </label>
-            </div>
-          </div>
+          <>
+            <CtxFieldPairs />
+            <CtxFieldPairs />
+            <CtxFieldPairs />
+            <CtxFieldPairs />
+            <CtxFieldPairs />
+            <CtxFieldPairs />
+          </>
         )}
-      </div>
+      </fetcher.Form>
       <Outlet />
     </>
   );

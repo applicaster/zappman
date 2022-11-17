@@ -10,7 +10,7 @@ export const responseSchema = z.object({
   createdAt: z.number(),
   requestId: z.string(),
   data: z.any(),
-  error: z.string().optional()
+  error: z.string().optional(),
 });
 
 export type ResponseItem = z.infer<typeof responseSchema>;
@@ -24,6 +24,7 @@ export async function createResponse(requestId: string) {
 
   const request = requestSchema.parse(await getRequest(requestId));
   try {
+    if (!request.url) throw new Error("URL was not set");
     const url = new URL(request.url);
     if (request?.ctx) {
       const ctxObj = request?.ctx.reduce((item, acc: any) => {

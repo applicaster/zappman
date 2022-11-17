@@ -6,7 +6,7 @@ import { getRequest, requestSchema } from "./requests";
 
 export const responseSchema = z.object({
   id: z.string(),
-  status: z.number(),
+  status: z.number().optional(),
   createdAt: z.number(),
   requestId: z.string(),
   data: z.any(),
@@ -44,7 +44,7 @@ export async function createResponse(requestId: string) {
       requestId,
       createdAt: Date.now(),
       data,
-      status: response.status,
+      status: response?.status,
     });
   } catch (error: any) {
     return responsesStore.setItem(responseId, {

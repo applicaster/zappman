@@ -113,6 +113,7 @@ export default function RequestElement() {
             <input
               type="text"
               className="input input-bordered w-full"
+              placeholder="Request URL (https://example.com/my-feed.json)"
               name="url"
               defaultValue={request?.url}
             />
@@ -147,7 +148,7 @@ export default function RequestElement() {
             name="title"
             defaultValue={request?.title}
             type="text"
-            placeholder="New Request"
+            placeholder="New Request Title"
             className="input input-sm input-bordered  w-full "
           />
         </div>

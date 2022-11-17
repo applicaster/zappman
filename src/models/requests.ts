@@ -3,9 +3,14 @@ import { applyPatch } from "fast-json-patch";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 
-const requestSchema = z.object({
+export const requestSchema = z.object({
   url: z.string().url(),
+  requestType: z.enum(['contentFeed']),
+  title: z.string().optional(),
   createdAt: z.number(),
+  ctx: z.array(
+    z.object({ key: z.string().optional(), value: z.any().optional() })
+  ).optional(),
 });
 
 export type RequestItem = z.infer<typeof requestSchema>;

@@ -4,8 +4,8 @@ export default function ctxFieldPairs({
   defaultValueValue,
 }: {
   index: number;
-  defaultKeyValue: string;
-  defaultValueValue: string;
+  defaultKeyValue?: string;
+  defaultValueValue?: string;
 }) {
   return (
     <div className="flex gap-4">

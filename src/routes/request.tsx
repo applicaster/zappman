@@ -12,13 +12,20 @@ import {
   useParams,
 } from "react-router-dom";
 import qs from "qs";
+import { z } from "zod";
 
 import CtxFieldPairs from "../components/ctx-field-pairs";
-import { deleteRequest, getRequest, updateRequest } from "../models/requests";
+import {
+  deleteRequest,
+  getRequest,
+  RequestItem,
+  updateRequest,
+} from "../models/requests";
 import { createResponse, getLatestResponse } from "../models/responses";
 
 export async function action({ request, params }: ActionFunctionArgs) {
-  const { requestId } = params;
+  const requestId = z.string().parse(params.requestId);
+
   const text = await request.text();
 
   const req: any = qs.parse(text, {
@@ -27,7 +34,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
 
   const actionType = req["action-type"];
-  console.log(actionType);
   if (actionType === "delete") {
     await deleteRequest(requestId);
     return redirect("/");
@@ -44,7 +50,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const { requestId, responseId } = params;
+  const { responseId } = params;
+  const requestId = z.string().parse(params.requestId);
+
   if (!responseId) {
     const latestResponse = await getLatestResponse(requestId);
     if (latestResponse?.id) {
@@ -68,14 +76,15 @@ const Tab = ({ isActive, to, children, isDisabled }: any) => {
 
 export default function RequestElement() {
   const { requestId } = useParams();
-  const { request } = useLoaderData();
-  // console.log(request);
-
+  const { request } = useLoaderData() as { request: RequestItem };
   const fetcher = useFetcher();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const activeTab = searchParams.get("activeTab");
-  const handleChange = (e) => {
+  if (!requestId || !request) {
+    throw new Error("request item is not set");
+  }
+  const handleChange = (e: any) => {
     const target = e.target as HTMLInputElement;
     fetcher.submit(
       {
@@ -167,31 +176,6 @@ export default function RequestElement() {
               defaultKeyValue={request?.ctx && request?.ctx[0].key}
               defaultValueValue={request?.ctx && request?.ctx[0].value}
             />
-            {/* <CtxFieldPairs
-              nameSuffix="2"
-              defaultKeyValue={request["ctxKey-2"]}
-              defaultValueValue={request["ctxValue-2"]}
-            />
-            <CtxFieldPairs
-              nameSuffix="3"
-              defaultKeyValue={request["ctxKey-3"]}
-              defaultValueValue={request["ctxValue-3"]}
-            />
-            <CtxFieldPairs
-              nameSuffix="4"
-              defaultKeyValue={request["ctxKey-4"]}
-              defaultValueValue={request["ctxValue-4"]}
-            />
-            <CtxFieldPairs
-              nameSuffix="5"
-              defaultKeyValue={request["ctxKey-5"]}
-              defaultValueValue={request["ctxValue-5"]}
-            />
-            <CtxFieldPairs
-              nameSuffix="6"
-              defaultKeyValue={request["ctxKey-6"]}
-              defaultValueValue={request["ctxValue-6"]}
-            /> */}
           </>
         )}
       </fetcher.Form>

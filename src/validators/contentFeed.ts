@@ -21,16 +21,9 @@ const fairPlayCertificateSchema = z
       try {
         if (obj?.extensions?.drm?.fairplay?.certificate_url) {
           await axios.get(obj?.extensions?.drm?.fairplay?.certificate_url);
-          // const res = await fetch(
-          //   obj?.extensions?.drm?.fairplay?.certificate_url
-          // );
-          // if (!res.ok) {
-          //   return false;
-          // }
         }
         return true;
       } catch (error) {
-        console.log("e*");
         return false;
       }
     },
@@ -52,7 +45,6 @@ const contentSrcEntrySchema = z
   })
   .refine(
     (val) => {
-      console.log({ val });
       if (val?.content?.type && !val.content.src) {
         return Boolean(val.link);
       }

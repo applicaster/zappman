@@ -117,7 +117,6 @@ export default function ResponseElement() {
                 }) || []
               );
               if (loaderData?.markers.length > 0) {
-                console.log("trigger");
                 editor.trigger("", "editor.action.marker.next", {});
               }
             }}

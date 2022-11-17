@@ -1,6 +1,8 @@
 import localforage from "localforage";
 import { nanoid } from "nanoid";
 import { getRequest } from "./requests";
+import qs from "qs";
+
 const responsesStore = localforage.createInstance({
   name: "responses",
 });
@@ -10,46 +12,35 @@ export async function createResponse(requestId) {
 
   const request = await getRequest(requestId);
   try {
-    const response = await fetch(request.url);
+    console.log(request);
+    const url = new URL(request.url);
+    const ctxObj = request?.ctx.reduce((item, acc) => {
+      if (acc[item.key]) {
+        acc[item.key] = item.value;
+      }
+      return acc;
+    }, {});
+    if (Object.keys(ctxObj).length > 0) {
+      url.searchParams.set("ctx", btoa(JSON.stringify(ctxObj)));
+    }
+    console.log(url.href);
+    const response = await fetch(url.href);
     const data = await response.json();
     return responsesStore.setItem(responseId, {
       id: responseId,
       requestId,
       createdAt: Date.now(),
       data,
-      status: response.status
+      status: response.status,
     });
   } catch (error) {
     return responsesStore.setItem(responseId, {
       id: responseId,
       requestId,
       createdAt: Date.now(),
-      error : error?.message || error.toString(),
+      error: error?.message || error.toString(),
     });
   }
-
-  // let data;
-  // const response = await fetch(request.url).catch((e) => {
-  //   console.log("--");
-  //   return responsesStore.setItem(responseId, {
-  //     id: responseId,
-  //     requestId,
-  //     createdAt: Date.now(),
-
-  //     error: "error",
-  //   });
-  // });
-  // console.log(response);
-
-  // try {
-  //   data = await response.json();
-  // } catch (error) {}
-  // return responsesStore.setItem(responseId, {
-  //   id: responseId,
-  //   requestId,
-  //   createdAt: Date.now(),
-  //   data,
-  // });
 }
 
 export async function getResponse(responseId) {

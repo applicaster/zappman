@@ -104,6 +104,8 @@ export default function RequestElement() {
         onChange={handleChange}
         className="request-url grid-item"
       >
+        {/* https://stackoverflow.com/a/51507806 */}
+        <button type="submit" disabled style={{ display: "none" }}></button>
         <div className="form-control">
           <div className="input-group">
             <select className="select select-bordered">
@@ -134,6 +136,8 @@ export default function RequestElement() {
         onChange={handleChange}
         className="request-details grid-item p-2"
       >
+        {/* https://stackoverflow.com/a/51507806 */}
+        <button type="submit" disabled style={{ display: "none" }}></button>
         <div className="mb-2">
           <button
             className="btn btn-xs btn-outline float-right"

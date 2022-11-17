@@ -52,8 +52,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return json({ request: await getRequest(requestId) });
 }
 
-const Tab = ({ isActive, to, children }: any) => {
-  return (
+const Tab = ({ isActive, to, children, isDisabled }: any) => {
+  return isDisabled ? (
+    <div className="tab tab-lifted pointer-events-none opacity-30 cursor-not-allowed">{children}</div>
+  ) : (
     <Link className={`tab tab-lifted ${isActive ? " tab-active" : ""}`} to={to}>
       {children}
     </Link>
@@ -149,7 +151,7 @@ export default function RequestElement() {
           <Tab to="?activeTab=ch" isActive={activeTab === "ch"}>
             Custom Headers
           </Tab>
-          <Tab to="?activeTab=body" isActive={activeTab === "body"}>
+          <Tab to="?activeTab=body" isActive={activeTab === "body"} isDisabled >
             Body
           </Tab>
         </div>

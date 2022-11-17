@@ -1,6 +1,9 @@
 import Editor from "@monaco-editor/react";
 import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { getResponse } from "../models/responses";
+import * as dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { responseId } = params;
@@ -23,7 +26,19 @@ export default function ResponseElement() {
   console.log(loaderData);
   return (
     <>
-      <div className="response-info grid-item"></div>
+      <div className="response-info grid-item  flex items-center justify-between px-2">
+        <div
+          className={`badge badge-${
+            loaderData?.response?.status < 300 ? "success" : "error"
+          }`}
+        >
+          {loaderData?.response?.status || "Error"}
+        </div>
+        <div>
+          {loaderData?.response?.createdAt &&
+            dayjs(loaderData?.response?.createdAt).fromNow()}
+        </div>
+      </div>
       <div className="response-details grid-item">
         {loaderData?.response?.error ? (
           <div className="p-2">Error: {loaderData?.response?.error}</div>

@@ -17,6 +17,7 @@ export async function createResponse(requestId) {
       requestId,
       createdAt: Date.now(),
       data,
+      status: response.status
     });
   } catch (error) {
     return responsesStore.setItem(responseId, {

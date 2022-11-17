@@ -3,7 +3,7 @@ import { findNodeAtLocation, parseTree } from "jsonc-parser";
 import { z } from "zod";
 import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { getResponse, responseSchema } from "../models/responses";
-import * as dayjs from "dayjs";
+import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
 import { getRequest, requestSchema } from "../models/requests";
 import { schema as contentFeedSchema } from "../validators/contentFeed";
@@ -77,6 +77,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export default function ResponseElement() {
   const loaderData: any = useLoaderData();
   const response = responseSchema.parse(loaderData.response);
+  
   return (
     <>
       <div className="response-info grid-item  flex items-center justify-between px-2">
@@ -88,8 +89,8 @@ export default function ResponseElement() {
           {loaderData?.response?.status || "Error"}
         </div>
         <div>
-          {loaderData?.response?.createdAt &&
-            dayjs(response?.createdAt).fromNow()}
+           {loaderData?.response?.createdAt &&
+            dayjs(response?.createdAt).fromNow()} 
         </div>
       </div>
       <div className="response-details grid-item">

@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Route, useRouteError } from "react-router-dom";
 
 import "./App.css";
 import Root, {
@@ -13,6 +13,14 @@ import ResponseElement, { loader as responseLoader } from "./routes/response";
 import EmptyRequest from "./routes/empty-request";
 import EmptyResponse from "./routes/empty-response";
 
+
+function ErrorBoundary() {
+  let error = useRouteError();
+  console.error(error);
+  // Uncaught ReferenceError: path is not defined
+  return <div>Dang!</div>;
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,12 +34,14 @@ const router = createBrowserRouter([
         element: <RequestElement />,
         loader: requestLoader,
         action: requestAction,
+        errorElement: <ErrorBoundary />,
         children: [
           { index: true, element: <EmptyResponse /> },
           {
             loader: responseLoader,
             path: "responses/:responseId",
             element: <ResponseElement />,
+            errorElement: <ErrorBoundary />,
           },
         ],
       },

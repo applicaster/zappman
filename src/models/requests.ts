@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export const requestSchema = z.object({
   id: z.string(),
-  url: z.string().url().optional(),
+  url: z.string().optional(),
   requestType: z.enum(['contentFeed']),
   title: z.string().optional(),
   createdAt: z.number(),
@@ -49,6 +49,7 @@ export async function updateRequest(
   requestId: string,
   { name, value }: { name: string; value: any }
 ) {
+  console.log('--')
   const request: RequestItem = requestSchema.parse(
     await requestsStore.getItem(requestId)
   );

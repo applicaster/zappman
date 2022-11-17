@@ -1,7 +1,9 @@
 import localforage from "localforage";
 import { nanoid } from "nanoid";
-import { getRequest } from "./requests";
-import qs from "qs";
+import { z } from "zod";
+import { getRequest, RequestItem } from "./requests";
+
+
 
 const responsesStore = localforage.createInstance({
   name: "responses",
@@ -10,7 +12,7 @@ const responsesStore = localforage.createInstance({
 export async function createResponse(requestId) {
   const responseId = nanoid(9);
 
-  const request = await getRequest(requestId);
+  const request: RequestItem = await getRequest(requestId);
   try {
     console.log(request);
     const url = new URL(request.url);

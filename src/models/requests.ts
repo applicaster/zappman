@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { z } from "zod";
 
 export const requestSchema = z.object({
+  id: z.string(),
   url: z.string().url(),
   requestType: z.enum(['contentFeed']),
   title: z.string().optional(),

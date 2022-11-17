@@ -6,7 +6,8 @@ import {
   redirect,
   useLoaderData,
 } from "react-router-dom";
-import { createRequest, getRequests } from "../models/requests";
+import {z} from 'zod'
+import { createRequest, getRequests, RequestItem, requestSchema } from "../models/requests";
 
 export async function loader() {
   return await getRequests();
@@ -18,7 +19,7 @@ export async function action() {
 }
 
 export default function Root() {
-  const loaderData = useLoaderData();
+  const loaderData = z.array(requestSchema).parse(useLoaderData());
   return (
     <>
       <div className="app bg-base-100">

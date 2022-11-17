@@ -5,11 +5,12 @@ const requestsStore = localforage.createInstance({
   name: "requests",
 });
 
-export async function createRequest() {
+export async function createRequest(requestType) {
   const id = nanoid(9);
   return requestsStore.setItem(id, {
     id,
     createdAt: Date.now(),
+    requestType 
   });
 }
 

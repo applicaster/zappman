@@ -13,7 +13,7 @@ export default function ctxFieldPairs() {
       </div>
       <div className="form-control flex-1 ">
         <label className="label">
-          <span className="label-text">Rename</span>
+          <span className="label-text">Value</span>
         </label>
         <label className="input-group">
           <span>

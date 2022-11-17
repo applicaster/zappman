@@ -13,7 +13,7 @@ export async function loader() {
 }
 
 export async function action() {
-  const request = await createRequest();
+  const request = await createRequest('contentFeed');
   return redirect(`/requests/${request.id}`);
 }
 

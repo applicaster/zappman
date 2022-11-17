@@ -1,4 +1,3 @@
-import "dracula-ui/styles/dracula-ui.css";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 
 import "./App.css";

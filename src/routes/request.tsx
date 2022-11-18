@@ -151,7 +151,7 @@ export default function RequestElement() {
             CTX
           </Tab>
           <Tab to="?activeTab=cqp" isActive={activeTab === "cqp"}>
-            Custom Query Params
+            Query Params
           </Tab>
           <Tab to="?activeTab=bt" isActive={activeTab === "bt"}>
             Bearer Token

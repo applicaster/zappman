@@ -1,6 +1,5 @@
 import {
   ActionFunctionArgs,
-  Form,
   json,
   Link,
   LoaderFunctionArgs,
@@ -16,7 +15,6 @@ import { z } from "zod";
 
 import CtxFieldPairs from "../components/ctx-field-pairs";
 import {
-  deleteRequest,
   getRequest,
   RequestItem,
   updateRequest,
@@ -34,10 +32,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
 
   const actionType = req["action-type"];
-  if (actionType === "delete") {
-    await deleteRequest(requestId);
-    return redirect("/");
-  }
   if (actionType === "update") {
     // console.log(req.patch);
     await updateRequest(requestId, req);
@@ -141,14 +135,7 @@ export default function RequestElement() {
         {/* https://stackoverflow.com/a/51507806 */}
         <button type="submit" disabled style={{ display: "none" }}></button>
         <div className="mb-2">
-          <button
-            className="btn btn-xs btn-outline float-right"
-            type="submit"
-            name="action-type"
-            value="delete"
-          >
-            Delete
-          </button>
+         
           <h2 className="mb-2 font-semibold">General Settings</h2>
           <input
             name="title"

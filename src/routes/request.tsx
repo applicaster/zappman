@@ -120,7 +120,9 @@ export default function RequestElement() {
               defaultValue={request?.url}
             />
             <button
-              className="btn last:rounded-r-sm"
+              className={`btn last:rounded-r-sm ${
+                fetcher.state !== "idle" ? "loading btn-disabled" : ""
+              }`}
               type="submit"
               name="action-type"
               value="send"
@@ -181,22 +183,22 @@ export default function RequestElement() {
               defaultKeyValue={request?.ctx && request?.ctx[0].key}
               defaultValueValue={request?.ctx && request?.ctx[0].value}
             />
-             <CtxFieldPairs
+            <CtxFieldPairs
               index={1}
               defaultKeyValue={request?.ctx && request?.ctx[1].key}
               defaultValueValue={request?.ctx && request?.ctx[1].value}
             />
-             <CtxFieldPairs
+            <CtxFieldPairs
               index={2}
               defaultKeyValue={request?.ctx && request?.ctx[2].key}
               defaultValueValue={request?.ctx && request?.ctx[2].value}
             />
-             <CtxFieldPairs
+            <CtxFieldPairs
               index={3}
               defaultKeyValue={request?.ctx && request?.ctx[3].key}
               defaultValueValue={request?.ctx && request?.ctx[3].value}
             />
-             <CtxFieldPairs
+            <CtxFieldPairs
               index={4}
               defaultKeyValue={request?.ctx && request?.ctx[4].key}
               defaultValueValue={request?.ctx && request?.ctx[4].value}

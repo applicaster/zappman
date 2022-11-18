@@ -113,7 +113,7 @@ export default function RequestElement() {
               {/* <option>POST</option> */}
             </select>
             <input
-              type="text"
+              type="url"
               className="input input-bordered w-full"
               placeholder="Request URL (https://example.com/my-feed.json)"
               name="url"

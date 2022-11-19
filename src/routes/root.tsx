@@ -39,7 +39,6 @@ export async function action({ request }: ActionFunctionArgs) {
     const pathname = z.string().parse(formData.get("pathname"));
     const title = z.string().parse(formData.get("title"));
     await updateRequest(requestId, { name: "title", value: title });
-    console.log(pathname);
     return redirect(pathname, 204);
   }
   if (actionType === "delete") {

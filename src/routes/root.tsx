@@ -1,9 +1,11 @@
 import {
   ActionFunctionArgs,
   Form,
+  json,
   Link,
   Outlet,
   redirect,
+  useFetcher,
   useLoaderData,
   useLocation,
   useSubmit,
@@ -18,6 +20,7 @@ import {
   deleteRequest,
   getRequests,
   requestSchema,
+  updateRequest,
 } from "../models/requests";
 
 export async function loader() {
@@ -30,6 +33,14 @@ export async function action({ request }: ActionFunctionArgs) {
   if (actionType === "add") {
     const req = await createRequest("contentFeed");
     return redirect(`/requests/${req.id}`);
+  }
+  if (actionType === "update") {
+    const requestId = z.string().parse(formData.get("request-id"));
+    const pathname = z.string().parse(formData.get("pathname"));
+    const title = z.string().parse(formData.get("title"));
+    await updateRequest(requestId, { name: "title", value: title });
+    console.log(pathname);
+    return redirect(pathname, 204);
   }
   if (actionType === "delete") {
     const requestId = z.string().parse(formData.get("request-id"));
@@ -45,6 +56,7 @@ export default function Root() {
   const loaderData = z.array(requestSchema).parse(useLoaderData());
   const { pathname } = useLocation();
   const submit = useSubmit();
+  const fetcher = useFetcher();
   return (
     <>
       <div className="app bg-base-100">
@@ -66,12 +78,21 @@ export default function Root() {
           </div>
           <div>
             {loaderData?.map((request) => {
-              const title = request.title ?? <i>New Request</i>;
+              const title = request.title ?? "New Request";
               return (
                 <MenuItem
                   to={`/requests/${request.id}`}
                   title={title}
                   key={request.id}
+                  onUpdate={(title: string) => {
+                    let formData = new FormData();
+                    formData.append("action-type", "update");
+                    formData.append("title", title);
+                    formData.append("pathname", pathname);
+
+                    formData.append("request-id", request.id);
+                    fetcher.submit(formData, { method: "post" });
+                  }}
                 >
                   <DropdownMenu.Item
                     className="py-2 px-4 w-full text-xs text-left cursor-pointer hover:bg-slate-300"
@@ -86,6 +107,7 @@ export default function Root() {
                   >
                     Delete
                   </DropdownMenu.Item>
+                 
                 </MenuItem>
               );
             })}

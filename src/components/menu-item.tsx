@@ -1,16 +1,21 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { useState } from "react";
 
 import { NavLink } from "react-router-dom";
+import Editable from "./editable";
 
 export default function MenuItem({
   title,
   to,
   children,
+  onUpdate,
 }: {
   title: any;
   to: string;
   children: any;
+  onUpdate: any;
 }) {
+  const [isFocused, setFocus] = useState(false);
   return (
     <NavLink
       to={to}
@@ -20,7 +25,13 @@ export default function MenuItem({
         }`
       }
     >
-      <div>{title}</div>
+      <div>
+        <Editable
+          defaultText={title}
+          onUpdate={onUpdate}
+          isFocused={isFocused}
+        />
+      </div>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild className="group focus:outline-none">
           <svg
@@ -39,8 +50,23 @@ export default function MenuItem({
           </svg>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
-          <DropdownMenu.Content align="end" alignOffset={-15} className=" bg-white border py-1 mt-1 w-40 rounded-md  shadow-lg focus:outline-none flex flex-col">
+          <DropdownMenu.Content
+            align="end"
+            alignOffset={-15}
+            className=" bg-white border py-1 mt-1 w-40 rounded-md  shadow-lg focus:outline-none flex flex-col"
+          >
             {children}
+            <DropdownMenu.Item
+              onClick={() => {
+                setFocus(false);
+                setTimeout(() => {
+                  setFocus(true);
+                }, 0);
+              }}
+              className="py-2 px-4 w-full text-xs text-left cursor-pointer hover:bg-slate-300"
+            >
+              Rename
+            </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>

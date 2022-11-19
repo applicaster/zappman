@@ -3,12 +3,10 @@ import { findNodeAtLocation, parseTree } from "jsonc-parser";
 import { z } from "zod";
 import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { getResponse, responseSchema } from "../models/responses";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { getRequest, requestSchema } from "../models/requests";
 import { schema as contentFeedSchema } from "../validators/contentFeed";
+import TimeAgo from "../components/time-ago";
 
-dayjs.extend(relativeTime);
 
 async function init({ json, schema }: { json: any; schema: any }) {
   const stringifiedJson = JSON.stringify(json, null, 2);
@@ -83,14 +81,17 @@ export default function ResponseElement() {
       <div className="response-info grid-item  flex items-center justify-between px-2">
         <div
           className={`badge badge-${
-            response && response.status && response.status < 300 ? "success" : "error"
+            response && response.status && response.status < 300
+              ? "success"
+              : "error"
           }`}
         >
           {loaderData?.response?.status || "Error"}
         </div>
-        <div>
-          {loaderData?.response?.createdAt &&
-            dayjs(response?.createdAt).fromNow()}
+        <div className="text-sm">
+          {loaderData?.response?.createdAt && (
+            <TimeAgo timestamp={response?.createdAt} />
+          )}
         </div>
       </div>
       <div className="response-details grid-item">

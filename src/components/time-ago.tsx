@@ -9,8 +9,8 @@ export default function TimeAgo({ timestamp }: { timestamp: number }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(Date.now());
-    }, 60_000);
-    return clearInterval(interval);
+    }, 30_000);
+    return () => clearInterval(interval);
   }, [timestamp]);
   return (
     <React.Fragment key={now}>{dayjs(timestamp).fromNow()}</React.Fragment>

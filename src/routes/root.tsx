@@ -6,8 +6,11 @@ import {
   redirect,
   useLoaderData,
   useLocation,
+  useSubmit,
 } from "react-router-dom";
 import { z } from "zod";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+
 import MenuItem from "../components/menu-item";
 
 import {
@@ -32,13 +35,16 @@ export async function action({ request }: ActionFunctionArgs) {
     const requestId = z.string().parse(formData.get("request-id"));
     const pathname = z.string().parse(formData.get("pathname"));
     await deleteRequest(requestId);
-    return pathname.includes(requestId) ? redirect("/") : redirect(pathname);
+    return pathname.includes(requestId)
+      ? redirect("/", 204)
+      : redirect(pathname, 204);
   }
 }
 
 export default function Root() {
   const loaderData = z.array(requestSchema).parse(useLoaderData());
   const { pathname } = useLocation();
+  const submit = useSubmit();
   return (
     <>
       <div className="app bg-base-100">
@@ -67,29 +73,19 @@ export default function Root() {
                   title={title}
                   key={request.id}
                 >
-                  {({ close }: any) => (
-                    <Form method="post">
-                      <input
-                        type="hidden"
-                        value={request.id}
-                        name="request-id"
-                      />
-                      <input type="hidden" value={pathname} name="pathname" />
-                      <button
-                        className="py-2 px-4 w-full text-left cursor-pointer hover:bg-slate-300"
-                        type="submit"
-                        name="action-type"
-                        value="delete"
-                        onClick={() =>
-                          setTimeout(() => {
-                            close();
-                          }, 10)
-                        }
-                      >
-                        Delete
-                      </button>
-                    </Form>
-                  )}
+                  <DropdownMenu.Item
+                    className="py-2 px-4 w-full text-xs text-left cursor-pointer hover:bg-slate-300"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      let formData = new FormData();
+                      formData.append("action-type", "delete");
+                      formData.append("pathname", pathname);
+                      formData.append("request-id", request.id);
+                      submit(formData, { method: "post" });
+                    }}
+                  >
+                    Delete
+                  </DropdownMenu.Item>
                 </MenuItem>
               );
             })}

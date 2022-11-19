@@ -34,6 +34,7 @@ const router = createBrowserRouter([
         element: <RequestElement />,
         loader: requestLoader,
         action: requestAction,
+        shouldRevalidate: () => true,
         errorElement: <ErrorBoundary />,
         children: [
           { index: true, element: <EmptyResponse /> },

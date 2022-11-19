@@ -1,6 +1,5 @@
 import {
   ActionFunctionArgs,
-  Form,
   json,
   Link,
   LoaderFunctionArgs,
@@ -16,7 +15,6 @@ import { z } from "zod";
 
 import CtxFieldPairs from "../components/ctx-field-pairs";
 import {
-  deleteRequest,
   getRequest,
   RequestItem,
   updateRequest,
@@ -34,10 +32,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
 
   const actionType = req["action-type"];
-  if (actionType === "delete") {
-    await deleteRequest(requestId);
-    return redirect("/");
-  }
   if (actionType === "update") {
     // console.log(req.patch);
     await updateRequest(requestId, req);
@@ -120,7 +114,9 @@ export default function RequestElement() {
               defaultValue={request?.url}
             />
             <button
-              className="btn last:rounded-r-sm"
+              className={`btn last:rounded-r-sm ${
+                fetcher.state !== "idle" ? "loading btn-disabled" : ""
+              }`}
               type="submit"
               name="action-type"
               value="send"
@@ -139,14 +135,7 @@ export default function RequestElement() {
         {/* https://stackoverflow.com/a/51507806 */}
         <button type="submit" disabled style={{ display: "none" }}></button>
         <div className="mb-2">
-          <button
-            className="btn btn-xs btn-outline float-right"
-            type="submit"
-            name="action-type"
-            value="delete"
-          >
-            Delete
-          </button>
+         
           <h2 className="mb-2 font-semibold">General Settings</h2>
           <input
             name="title"
@@ -162,7 +151,7 @@ export default function RequestElement() {
             CTX
           </Tab>
           <Tab to="?activeTab=cqp" isActive={activeTab === "cqp"}>
-            Custom Query Params
+            Query Params
           </Tab>
           <Tab to="?activeTab=bt" isActive={activeTab === "bt"}>
             Bearer Token
@@ -181,22 +170,22 @@ export default function RequestElement() {
               defaultKeyValue={request?.ctx && request?.ctx[0].key}
               defaultValueValue={request?.ctx && request?.ctx[0].value}
             />
-             <CtxFieldPairs
+            <CtxFieldPairs
               index={1}
               defaultKeyValue={request?.ctx && request?.ctx[1].key}
               defaultValueValue={request?.ctx && request?.ctx[1].value}
             />
-             <CtxFieldPairs
+            <CtxFieldPairs
               index={2}
               defaultKeyValue={request?.ctx && request?.ctx[2].key}
               defaultValueValue={request?.ctx && request?.ctx[2].value}
             />
-             <CtxFieldPairs
+            <CtxFieldPairs
               index={3}
               defaultKeyValue={request?.ctx && request?.ctx[3].key}
               defaultValueValue={request?.ctx && request?.ctx[3].value}
             />
-             <CtxFieldPairs
+            <CtxFieldPairs
               index={4}
               defaultKeyValue={request?.ctx && request?.ctx[4].key}
               defaultValueValue={request?.ctx && request?.ctx[4].value}

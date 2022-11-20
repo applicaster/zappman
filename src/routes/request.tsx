@@ -134,17 +134,6 @@ export default function RequestElement() {
       >
         {/* https://stackoverflow.com/a/51507806 */}
         <button type="submit" disabled style={{ display: "none" }}></button>
-        <div className="mb-2">
-         
-          <h2 className="mb-2 font-semibold">General Settings</h2>
-          <input
-            name="title"
-            defaultValue={request?.title}
-            type="text"
-            placeholder="New Request Title"
-            className="input input-sm input-bordered  w-full "
-          />
-        </div>
         <h2 className="mb-2 font-semibold">Context Keys</h2>
         <div className="tabs ">
           <Tab to="?activeTab=ctx" isActive={activeTab === "ctx" || !activeTab}>

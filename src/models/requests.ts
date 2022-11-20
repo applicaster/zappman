@@ -49,7 +49,6 @@ export async function updateRequest(
   requestId: string,
   { name, value }: { name: string; value: any }
 ) {
-  console.log('--')
   const request: RequestItem = requestSchema.parse(
     await requestsStore.getItem(requestId)
   );

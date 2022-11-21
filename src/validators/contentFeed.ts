@@ -58,6 +58,9 @@ const contentSrcEntrySchema = z
 
 export const entrySchema = z
   .object({
+    title: z.string().optional(),
+    summary: z.string().optional(),
+
     id: z.string({
       invalid_type_error: "`id` must be a string",
     }),
@@ -70,6 +73,17 @@ export const entrySchema = z
     type: z.object({
       value: z.string(),
     }),
+    media_group: z.array(
+      z.object({
+        type: z.literal("image"),
+        media_item: z.array(
+          z.object({
+            key: z.string(),
+            src: z.string().url(),
+          })
+        ),
+      })
+    ),
     content: z
       .object({
         src: z.string({}).url().optional(),
@@ -80,6 +94,7 @@ export const entrySchema = z
       .optional(),
     extensions: z.object({}).optional(),
   })
+  .strict()
   .and(contentSrcEntrySchema)
   .and(fairPlayCertificateSchema);
 

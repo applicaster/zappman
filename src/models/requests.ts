@@ -6,6 +6,8 @@ import { z } from "zod";
 export const requestSchema = z.object({
   id: z.string(),
   url: z.string().optional(),
+  method: z.enum(['GET', 'POST']).optional(),
+  body: z.string().optional(),
   requestType: z.enum(["contentFeed", "login"]),
   title: z.string().optional(),
   folderId: z.string().optional(),

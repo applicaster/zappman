@@ -1,1 +1,1 @@
-- Issue -> Currently you can see only the one request on the side menu
+- Make sure all responses of a delete requests are being deleted

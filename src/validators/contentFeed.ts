@@ -5,7 +5,12 @@ import axios from "axios";
 
 const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
   if (issue.code === z.ZodIssueCode.invalid_type) {
-    return { message: `\`${issue.path.slice(-1)[0]}\` is required` };
+    console.log(issue);
+    return {
+      message: `\`${issue.path.slice(-1)[0]}\` has invalid type expected \`${
+        issue.expected
+      }\` but received \`${issue.received}\`.`,
+    };
   }
   return { message: ctx.defaultError };
 };

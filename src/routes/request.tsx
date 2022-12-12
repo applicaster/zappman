@@ -51,7 +51,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     }
   }
   const request = await getRequest(requestId);
-  console.log({request})
+  console.log({ request });
   // After a request is deleted
   if (!request) return redirect("/");
   return json({ request });
@@ -106,9 +106,13 @@ export default function RequestElement() {
         <button type="submit" disabled style={{ display: "none" }}></button>
         <div className="form-control">
           <div className="input-group">
-            <select className="select select-bordered">
+            <select
+              className="select select-bordered"
+              name="method"
+              defaultValue={request?.method}
+            >
               <option>GET</option>
-              {/* <option>POST</option> */}
+              <option>POST</option>
             </select>
             <input
               type="url"
@@ -143,16 +147,16 @@ export default function RequestElement() {
           <Tab to="?activeTab=ctx" isActive={activeTab === "ctx" || !activeTab}>
             CTX
           </Tab>
-          <Tab to="?activeTab=cqp" isActive={activeTab === "cqp"}>
-            Query Params
-          </Tab>
           <Tab to="?activeTab=bt" isActive={activeTab === "bt"}>
             Bearer Token
+          </Tab>
+          <Tab to="?activeTab=cqp" isActive={activeTab === "cqp"}>
+            Query Params
           </Tab>
           <Tab to="?activeTab=ch" isActive={activeTab === "ch"}>
             Custom Headers
           </Tab>
-          <Tab to="?activeTab=body" isActive={activeTab === "body"} isDisabled>
+          <Tab to="?activeTab=body" isActive={activeTab === "body"}>
             Body
           </Tab>
         </div>
@@ -184,6 +188,21 @@ export default function RequestElement() {
               defaultValueValue={request?.ctx && request?.ctx[4].value}
             />
           </>
+        )}
+        {activeTab === "body" && (
+          <div>
+            <div className="form-control flex-1">
+              <label className="label">
+                <span className="label-text">JSON Body</span>
+              </label>
+              <textarea
+                name="body"
+                defaultValue={request?.body}
+                placeholder="Type here"
+                className="textarea input-sm input-bordered w-full h-48 "
+              />
+            </div>
+          </div>
         )}
       </fetcher.Form>
       <Outlet />

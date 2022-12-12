@@ -52,15 +52,26 @@ async function init({ json, schema }: { json: any; schema: any }) {
   return { markers: [], stringifiedJson };
 }
 
+const schemaByType = {
+  contentFeed: contentFeedSchema,
+  login: z.object({
+    access_token: z.string(),
+    refresh_token: z.string(),
+    expires_in: z.number(),
+    status: z.number(),
+  }),
+};
+
 export async function loader({ params }: LoaderFunctionArgs) {
   const { requestId, responseId } = z
     .object({ requestId: z.string(), responseId: z.string() })
     .parse(params);
   const { requestType } = requestSchema.parse(await getRequest(requestId));
+  console.log({ requestType });
   const response = responseSchema.parse(await getResponse(responseId));
   const { markers, stringifiedJson } = await init({
     json: response?.data ?? {},
-    schema: contentFeedSchema,
+    schema: schemaByType[requestType],
   });
   return json({
     markers,

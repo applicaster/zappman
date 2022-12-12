@@ -6,7 +6,7 @@ import { z } from "zod";
 export const requestSchema = z.object({
   id: z.string(),
   url: z.string().optional(),
-  method: z.enum(['GET', 'POST']).optional(),
+  method: z.enum(["GET", "POST"]).optional(),
   body: z.string().optional(),
   requestType: z.enum(["contentFeed", "login"]),
   title: z.string().optional(),
@@ -76,16 +76,6 @@ export async function getRequest(requestId: string) {
   return requestsStore.getItem(requestId);
 }
 
-// export async function getRequests() {
-//   const requests: RequestItem[] = [];
-//   await requestsStore.iterate((value: RequestItem, key, iterationNumber) => {
-//     console.log(key, { iterationNumber }, "---");
-//     requests.push(value);
-//   });
-//   console.log(requests.length, "--");
-//   return requests.sort((a, b) => b.createdAt - a.createdAt);
-// }
-
 export async function getRequestsHierarchy() {
   const folders: Folder[] = [];
   await foldersStore.iterate((value: Folder, key) => {
@@ -134,7 +124,10 @@ export async function renameRequest(requestId: string, newTitle: string) {
   const request: RequestItem = requestSchema.parse(
     await requestsStore.getItem(requestId)
   );
-  return await requestsStore.setItem(requestId, { ...request, title: newTitle });
+  return await requestsStore.setItem(requestId, {
+    ...request,
+    title: newTitle,
+  });
 }
 
 export async function updateRequest(

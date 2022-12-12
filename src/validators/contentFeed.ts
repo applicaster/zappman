@@ -1,4 +1,3 @@
-import { findNodeAtLocation, parseTree } from "jsonc-parser";
 import { z } from "zod";
 // TODO: use native fetch instead of axios
 import axios from "axios";

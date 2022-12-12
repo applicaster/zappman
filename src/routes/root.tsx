@@ -12,8 +12,6 @@ import {
 import { z } from "zod";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
-import MenuItem from "../components/menu-item";
-
 import {
   createRequest,
   createRequests,
@@ -21,7 +19,6 @@ import {
   getRequestsHierarchy,
   updateRequest,
 } from "../models/requests";
-import { useState } from "react";
 import Menu, { dataSchema } from "../components/menu";
 
 const itemMapper = (item: any) => ({
@@ -56,8 +53,6 @@ export async function action({ request }: ActionFunctionArgs) {
     console.log("add-login-requests");
     const [firstReq] = await createRequests("login");
     return redirect("/");
-    // const req = await createRequest("contentFeed");
-    // return redirect(`/requests/${req.id}`);
   }
   if (actionType === "update") {
     const requestId = z.string().parse(formData.get("request-id"));
@@ -77,15 +72,14 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Root() {
-  const [expandedPreview, setExpandPreview] = useState(false);
   const loaderData = dataSchema.parse(useLoaderData());
- 
+
   const { pathname } = useLocation();
   const submit = useSubmit();
   const fetcher = useFetcher();
   return (
     <>
-      <div id="app" className={`bg-base-100 ${expandedPreview && "expanded"}`}>
+      <div id="app" className={`bg-base-100 `}>
         <header className="grid-item p-2  flex justify-between">
           <div className="font-bold">
             <Link to={"/"}>Zappman (Alpha)</Link>
@@ -127,16 +121,6 @@ export default function Root() {
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
-            {/* <Form method="post">
-              <button
-                className="btn btn-xs btn-outline"
-                name="action-type"
-                value="add"
-                type="submit"
-              >
-                New
-              </button>
-            </Form> */}
           </div>
           <div>
             <Menu data={loaderData} />

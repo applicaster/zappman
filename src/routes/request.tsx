@@ -16,7 +16,6 @@ import { z } from "zod";
 import CtxFieldPairs from "../components/ctx-field-pairs";
 import { getRequest, RequestItem, updateRequest } from "../models/requests";
 import { createResponse, getLatestResponse } from "../models/responses";
-import { useEffect } from "react";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const requestId = z.string().parse(params.requestId);

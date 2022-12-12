@@ -38,15 +38,10 @@ export async function createResponse(requestId: string) {
       }
     }
     const headers: any = {};
-    // if (request?.body) {
-    //   headers["Content-Type"] = "application/json";
-      
-    // }
     const response = await fetch(url.href, {
       method: request?.method || "GET",
       body: request?.body,
       headers,
-      // mode: 'no-cors'
     });
     const data = await response.json();
     return responsesStore.setItem(responseId, {

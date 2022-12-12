@@ -7,7 +7,6 @@ import { getRequest, requestSchema } from "../models/requests";
 import { schema as contentFeedSchema } from "../validators/contentFeed";
 import TimeAgo from "../components/time-ago";
 
-
 async function init({ json, schema }: { json: any; schema: any }) {
   const stringifiedJson = JSON.stringify(json, null, 2);
   const parsedJson = parseTree(stringifiedJson);
@@ -100,7 +99,11 @@ export default function ResponseElement() {
         ) : (
           <Editor
             key={loaderData?.responseId}
-            options={{ readOnly: true, renderValidationDecorations: "on" }}
+            options={{
+              readOnly: true,
+              renderValidationDecorations: "on",
+              wordWrap: "on",
+            }}
             onMount={(editor, monaco) => {
               const model = editor.getModel();
               if (!model) return;

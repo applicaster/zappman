@@ -8,7 +8,8 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
-.app {
+#app {
+ 
   height: 100vh;
   display: grid;
   grid-gap: 1px;
@@ -18,12 +19,12 @@ body {
     "header header header"
     "menu requestUrl responseInfo"
     "menu requestDetails responseDetails";
-  grid-template-columns: 2fr 5fr 4fr;
+  grid-template-columns: 2fr 5fr 6fr;
   grid-template-rows: auto auto 1fr;
 }
 
 .grid-item {
-  background-color: white;
+  background-color: #f1f1f1;
 }
 
 header {
@@ -38,13 +39,15 @@ header {
   grid-area: requestUrl;
 }
 
+.request-details {
+  grid-area: requestDetails;
+}
+
 .response-info {
   grid-area: responseInfo;
 }
 
-.request-details {
-  grid-area: requestDetails;
-}
+
 
 .response-details {
   grid-area: responseDetails;

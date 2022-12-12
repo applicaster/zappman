@@ -14,12 +14,9 @@ import qs from "qs";
 import { z } from "zod";
 
 import CtxFieldPairs from "../components/ctx-field-pairs";
-import {
-  getRequest,
-  RequestItem,
-  updateRequest,
-} from "../models/requests";
+import { getRequest, RequestItem, updateRequest } from "../models/requests";
 import { createResponse, getLatestResponse } from "../models/responses";
+import { useEffect } from "react";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const requestId = z.string().parse(params.requestId);
@@ -53,7 +50,11 @@ export async function loader({ params }: LoaderFunctionArgs) {
       return redirect(`/requests/${requestId}/responses/${latestResponse.id}`);
     }
   }
-  return json({ request: await getRequest(requestId) });
+  const request = await getRequest(requestId);
+  console.log({request})
+  // After a request is deleted
+  if (!request) return redirect("/");
+  return json({ request });
 }
 
 const Tab = ({ isActive, to, children, isDisabled }: any) => {
@@ -72,8 +73,11 @@ export default function RequestElement() {
   const { requestId } = useParams();
   const { request } = useLoaderData() as { request: RequestItem };
   const fetcher = useFetcher();
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+  // useEffect(() => {console.log(fetcher)}, [fetcher])
+
   const activeTab = searchParams.get("activeTab");
   if (!requestId || !request) {
     throw new Error("request item is not set");
@@ -115,7 +119,7 @@ export default function RequestElement() {
             />
             <button
               className={`btn last:rounded-r-sm ${
-                fetcher.state !== "idle" ? "loading btn-disabled" : ""
+                fetcher.state !== "idle" ? "btn-disabled" : ""
               }`}
               type="submit"
               name="action-type"

@@ -10,12 +10,15 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
+import Editor from "../components/editor";
 import qs from "qs";
 import { z } from "zod";
 
 import CtxFieldPairs from "../components/ctx-field-pairs";
 import { getRequest, RequestItem, updateRequest } from "../models/requests";
 import { createResponse, getLatestResponse } from "../models/responses";
+import { getBodySchema } from "../utils";
+
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const requestId = z.string().parse(params.requestId);
@@ -50,10 +53,20 @@ export async function loader({ params }: LoaderFunctionArgs) {
     }
   }
   const request = await getRequest(requestId);
-  console.log({ request });
   // After a request is deleted
   if (!request) return redirect("/");
-  return json({ request });
+  const bodySchema = getBodySchema(request?.requestType);
+  const defaultBody = bodySchema
+    ? JSON.stringify(getBodySchema(request?.requestType).safeParse({}), null, 2)
+    : "";
+  const markers = [];
+  return json({
+    request,
+    defaultBody,
+    bodySchema,
+    markers,
+    requestType: request?.requestType,
+  });
 }
 
 const Tab = ({ isActive, to, children, isDisabled }: any) => {
@@ -70,12 +83,15 @@ const Tab = ({ isActive, to, children, isDisabled }: any) => {
 
 export default function RequestElement() {
   const { requestId } = useParams();
-  const { request } = useLoaderData() as { request: RequestItem };
+  const { request, defaultBody } = useLoaderData() as {
+    request: RequestItem;
+  };
   const fetcher = useFetcher();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  // useEffect(() => {console.log(fetcher)}, [fetcher])
+  const bodySchema = getBodySchema(request?.requestType);
+
 
   const activeTab = searchParams.get("activeTab");
   if (!requestId || !request) {
@@ -106,12 +122,14 @@ export default function RequestElement() {
         <div className="form-control">
           <div className="input-group">
             <select
-              className="select select-bordered"
+              className={`select select-bordered ${
+                request?.method === "POST" && "text-purple-500"
+              }`}
               name="method"
               defaultValue={request?.method}
             >
-              <option>GET</option>
-              <option>POST</option>
+              <option disabled={request?.method === "POST"}>GET</option>
+              <option disabled={request?.method !== "POST"}>POST</option>
             </select>
             <input
               type="url"
@@ -194,12 +212,24 @@ export default function RequestElement() {
               <label className="label">
                 <span className="label-text">JSON Body</span>
               </label>
-              <textarea
-                name="body"
-                defaultValue={request?.body}
-                placeholder="Type here"
-                className="textarea input-sm input-bordered w-full h-48 "
-              />
+
+              <div className="h-36">
+                <Editor
+                  defaultValue={request?.body || defaultBody}
+                  validationSchema={bodySchema}
+                  onchange={(value) => {
+                    fetcher.submit(
+                      {
+                        id: requestId,
+                        name: "body",
+                        value: value || "",
+                        "action-type": "update",
+                      },
+                      { method: "post" }
+                    );
+                  }}
+                />
+              </div>
             </div>
           </div>
         )}

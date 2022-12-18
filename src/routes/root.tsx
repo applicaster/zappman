@@ -79,10 +79,10 @@ export default function Root() {
   const fetcher = useFetcher();
   return (
     <>
-      <div id="app" className={`bg-base-100 `}>
+      <div id="app" className={`bg-base-100`}>
         <header className="grid-item p-2  flex justify-between">
           <div className="font-bold">
-            <Link to={"/"}>Zappman (Alpha)</Link>
+            <Link to={"/"}>Pipes2 Debugging Tool (alpha)</Link>
           </div>
         </header>
         <div id="menu" className="grid-item flex flex-col ">
@@ -116,7 +116,7 @@ export default function Root() {
                     }}
                     className="py-2 px-4 w-full text-xs text-left cursor-pointer hover:bg-slate-300"
                   >
-                    Login requests
+                    Login Flow Requests
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>

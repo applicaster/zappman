@@ -1,1 +1,12 @@
 - Make sure all responses of a delete requests are being deleted
+- Body as monaco + validation
+- Add help text 
+- Plugable Requests types
+  - Each will have
+    - allowed methods (get and or post)
+    - validation schema
+    - body with validation (monaco)
+    - Help info (or allowed actions)
+- Each filled context type tabs should have a badge
+- General help
+- Explore Tauri

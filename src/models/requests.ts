@@ -40,6 +40,7 @@ export async function createRequest(requestType: "contentFeed") {
   const id = nanoid(9);
   return requestsStore.setItem(id, {
     id,
+    title: 'Feed',
     createdAt: Date.now(),
     requestType,
   });
@@ -51,22 +52,27 @@ export async function createRequests(requestsType: any) {
     await foldersStore.setItem(folderId, {
       id: folderId,
       requestsType,
-      title: "Login Requests",
+      title: "Login Flow Requests",
       createdAt: Date.now(),
     });
     return Promise.all(
-      [{ requestType: "login", title: "Login" }].map(
-        async ({ requestType, title }) => {
-          const id = nanoid(9);
-          await requestsStore.setItem(id, {
-            id,
-            title,
-            createdAt: Date.now(),
-            requestType,
-            folderId,
-          });
-        }
-      )
+      [
+        { requestType: "login", title: "Login" },
+        { requestType: "register", title: "Register" },
+        { requestType: "resetPassword", title: "Reset Password" },
+        { requestType: "refreshToken", title: "Refresh Token" },
+        { requestType: "deleteAccount", title: "Delete Account" },
+      ].map(async ({ requestType, title }) => {
+        const id = nanoid(9);
+        await requestsStore.setItem(id, {
+          id,
+          title,
+          createdAt: Date.now(),
+          requestType,
+          folderId,
+          method: "POST",
+        });
+      })
     );
   }
   return [];

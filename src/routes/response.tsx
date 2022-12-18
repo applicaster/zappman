@@ -85,6 +85,13 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export default function ResponseElement() {
   const loaderData: any = useLoaderData();
   const response = responseSchema.parse(loaderData.response);
+  let errorMessage;
+  if (response?.error) {
+    errorMessage =  response?.error
+  }
+  if (errorMessage === 'Failed to fetch') {
+    errorMessage =  "Please check your server connection or check for CORS issues." 
+  }
 
   return (
     <>
@@ -105,8 +112,9 @@ export default function ResponseElement() {
         </div>
       </div>
       <div className="response-details grid-item">
-        {response?.error ? (
-          <div className="p-2">Error: {response?.error}</div>
+        {errorMessage ? (
+          
+          <div className="p-2 text-red-500">Error: {errorMessage}</div>
         ) : (
           <Editor
             key={loaderData?.responseId}

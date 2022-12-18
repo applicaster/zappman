@@ -6,7 +6,6 @@ import { useRef } from "react";
 import { findNodeAtLocation, parseTree } from "jsonc-parser";
 
 export function mountMarkers(markers) {
-  console.log({ markers });
   return (editor, monaco) => {
     const model = editor.getModel();
     if (!model) return;
@@ -37,10 +36,8 @@ export async function createMarkers({
   json: string;
   schema: any;
 }) {
-  // const schema = z.object({email: z.string()})
   const parsedJson = parseTree(json);
   if (!json || !parsedJson) throw new Error("Not a valid JSON");
-  // console.log('**', schema, await schema.safeParseAsync(json) )
   const parsed = await schema.safeParseAsync(JSON.parse(json));
   let markers: {
     message: string;

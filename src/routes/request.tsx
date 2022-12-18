@@ -32,7 +32,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   const actionType = req["action-type"];
   if (actionType === "update") {
-    // console.log(req.patch);
     await updateRequest(requestId, req);
     return json({});
   }

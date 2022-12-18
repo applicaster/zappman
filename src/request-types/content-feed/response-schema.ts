@@ -4,7 +4,6 @@ import axios from "axios";
 
 const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
   if (issue.code === z.ZodIssueCode.invalid_type) {
-    console.log(issue);
     return {
       message: `\`${issue.path.slice(-1)[0]}\` has invalid type expected \`${
         issue.expected

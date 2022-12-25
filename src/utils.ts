@@ -1,17 +1,17 @@
 import { bodySchema, headersSchema } from "./request-types/login";
 
-const mapper = {
+const mapper:any = {
   login: {
     bodySchema: bodySchema,
     headersSchema: headersSchema
   },
 };
 
-export function getBodySchema(requestType) {
+export function getBodySchema(requestType:string) {
   return mapper[requestType]?.bodySchema;
 }
 
-export function getHeadersSchema(requestType) {
+export function getHeadersSchema(requestType:string) {
   return mapper[requestType]?.headersSchema;
 }
 

@@ -39,7 +39,7 @@ export async function createResponse(requestId: string) {
     }
     let headers = {};
     if (request?.headers) {
-      headers = request?.headers.reduce((acc, item) => {
+      headers = request?.headers.reduce((acc:any, item) => {
         if (item.key) {
           acc[item.key] = item.value;
         }

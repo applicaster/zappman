@@ -5,8 +5,8 @@ import type { editor } from "monaco-editor";
 import { useRef } from "react";
 import { findNodeAtLocation, parseTree } from "jsonc-parser";
 
-export function mountMarkers(markers) {
-  return (editor, monaco) => {
+export function mountMarkers(markers: any) {
+  return (editor: any, monaco: any) => {
     const model = editor.getModel();
     if (!model) return;
     monaco.editor.setModelMarkers(
@@ -88,8 +88,8 @@ export default function ({
   validationSchema: any;
   defaultValue?: string;
 }) {
-  const monacoRef = useRef<Monaco>(null);
-  const editorRef = useRef<editor.IStandaloneCodeEditor>(null);
+  const monacoRef: any = useRef<Monaco>(null);
+  const editorRef: any = useRef<editor.IStandaloneCodeEditor>(null);
   return (
     <Editor
       className="p-2 bg-white"

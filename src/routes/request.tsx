@@ -50,7 +50,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
       return redirect(`/requests/${requestId}/responses/${latestResponse.id}`);
     }
   }
-  const request = await getRequest(requestId);
+  const request: any = await getRequest(requestId);
   // After a request is deleted
   if (!request) return redirect("/");
   const bodySchema = getBodySchema(request?.requestType);
@@ -61,13 +61,12 @@ export async function loader({ params }: LoaderFunctionArgs) {
   request.headers = request?.headers || [];
 
   // if (request?.headers) {
-  
-  const  defaultHeaders = getHeadersSchema(request?.requestType)?.safeParse(
-    {}
-  ).data || {}
+
+  const defaultHeaders =
+    getHeadersSchema(request?.requestType)?.safeParse({}).data || {};
   // if headers are empty fill headers
   if (
-    !request?.headers?.find((header) => {
+    !request?.headers?.find((header: any) => {
       return Object.keys(header).includes("key");
     })
   ) {
@@ -80,7 +79,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   }
   // }
 
-  const markers = [];
+  const markers: any = [];
   return json({
     request,
     defaultBody,
@@ -104,7 +103,7 @@ const Tab = ({ isActive, to, children, isDisabled }: any) => {
 
 export default function RequestElement() {
   const { requestId } = useParams();
-  const { request, defaultBody } = useLoaderData() as {
+  const { request, defaultBody }: any = useLoaderData() as {
     request: RequestItem;
   };
   const fetcher = useFetcher();
@@ -242,7 +241,7 @@ export default function RequestElement() {
                 <Editor
                   defaultValue={request?.body || defaultBody}
                   validationSchema={bodySchema}
-                  onchange={(value) => {
+                  onchange={(value: string) => {
                     fetcher.submit(
                       {
                         id: requestId,

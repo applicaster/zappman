@@ -55,7 +55,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   if (!request) return redirect("/");
   const bodySchema = getBodySchema(request?.requestType);
   const defaultBody = bodySchema
-    ? JSON.stringify(getBodySchema(request?.requestType).safeParse({}), null, 2)
+    ? JSON.stringify(getBodySchema(request?.requestType).safeParse({}).data, null, 2)
     : "";
 
   request.headers = request?.headers || [];
@@ -105,7 +105,6 @@ export default function RequestElement() {
   const { request, defaultBody }: any = useLoaderData() as {
     request: RequestItem;
   };
-  console.log(request)
   const fetcher = useFetcher();
 
   const location = useLocation();

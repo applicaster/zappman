@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const bodySchema = z.object({
-  email: z.string().email().default("<USER_PASSWORD>"),
-  password: z.string().default("<USER_EMAIL>"),
+  email: z.string().email().default("user@exaple.com"),
+  password: z.string().default("password"),
 });
 
 export const responseSchema = z.object({

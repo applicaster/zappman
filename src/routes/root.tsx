@@ -74,8 +74,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Root() {
   const loaderData = dataSchema.parse(useLoaderData());
 
-  const { pathname } = useLocation();
-  const submit = useSubmit();
+  // const { pathname } = useLocation();
+  // const submit = useSubmit();
   const fetcher = useFetcher();
   return (
     <>
@@ -85,7 +85,7 @@ export default function Root() {
             <Link to={"/"}>Pipes2 Debugging Tool (alpha)</Link>
           </div>
         </header>
-        <div id="menu" className="grid-item flex flex-col ">
+        <div id="menu" className="grid-item flex flex-col overflow-y-auto">
           <div className="text-right p-2 border-b-2">
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>

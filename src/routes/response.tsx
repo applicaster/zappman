@@ -58,7 +58,6 @@ const schemaByType = {
     access_token: z.string(),
     refresh_token: z.string(),
     expires_in: z.number(),
-    status: z.number(),
   }),
 };
 

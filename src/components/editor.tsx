@@ -96,9 +96,9 @@ export default function ({
       theme="vs-light"
       language="json"
       onChange={(value) => {
-        if (defaultValue) {
+        if (value) {
           createMarkers({
-            json: defaultValue,
+            json: value,
             schema: validationSchema,
           }).then((markers) => {
             mountMarkers(markers)(editorRef.current, monacoRef.current);

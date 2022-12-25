@@ -15,6 +15,9 @@ export const requestSchema = z.object({
   ctx: z
     .array(z.object({ key: z.string().optional(), value: z.any().optional() }))
     .optional(),
+  headers: z
+    .array(z.object({ key: z.string().optional(), value: z.any().optional() }))
+    .optional(),
 });
 
 export type RequestItem = z.infer<typeof requestSchema>;
@@ -40,7 +43,7 @@ export async function createRequest(requestType: "contentFeed") {
   const id = nanoid(9);
   return requestsStore.setItem(id, {
     id,
-    title: 'Feed',
+    title: "Feed",
     createdAt: Date.now(),
     requestType,
   });
@@ -146,9 +149,14 @@ export async function updateRequest(
 
   return await requestsStore.setItem(
     requestId,
-    // TODO: see how to remove the need of creating the ctx array
-    applyPatch({ ctx: [{}, {}, {}, {}, {}, {}], ...request }, [
-      { op: "replace", path: `/${name.replaceAll(".", "/")}`, value },
-    ]).newDocument
+    // TODO: see how to remove the need of creating the array
+    applyPatch(
+      {
+        ctx: [{}, {}, {}, {}, {}, {}],
+        headers: [{}, {}, {}, {}, {}, {}],
+        ...request,
+      },
+      [{ op: "replace", path: `/${name.replaceAll(".", "/")}`, value }]
+    ).newDocument
   );
 }

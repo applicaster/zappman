@@ -10,3 +10,7 @@ export const responseSchema = z.object({
   refresh_token: z.string(),
   expires_in: z.number(),
 });
+
+export const headersSchema = z.object({
+  "Content-Type": z.literal("application/json").default("application/json")
+})

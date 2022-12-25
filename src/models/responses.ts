@@ -37,7 +37,16 @@ export async function createResponse(requestId: string) {
         url.searchParams.set("ctx", btoa(JSON.stringify(ctxObj)));
       }
     }
-    const headers: any = {};
+    let headers = {};
+    if (request?.headers) {
+      headers = request?.headers.reduce((acc, item) => {
+        if (item.key) {
+          acc[item.key] = item.value;
+        }
+        return acc;
+      }, {});
+    }
+
     const response = await fetch(url.href, {
       method: request?.method || "GET",
       body: request?.body,

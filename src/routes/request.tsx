@@ -14,11 +14,10 @@ import Editor from "../components/editor";
 import qs from "qs";
 import { z } from "zod";
 
-import CtxFieldPairs from "../components/ctx-field-pairs";
+import FieldPairs from "../components/field-pairs";
 import { getRequest, RequestItem, updateRequest } from "../models/requests";
 import { createResponse, getLatestResponse } from "../models/responses";
-import { getBodySchema } from "../utils";
-
+import { getBodySchema, getHeadersSchema } from "../utils";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const requestId = z.string().parse(params.requestId);
@@ -58,6 +57,29 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const defaultBody = bodySchema
     ? JSON.stringify(getBodySchema(request?.requestType).safeParse({}), null, 2)
     : "";
+
+  request.headers = request?.headers || [];
+
+  // if (request?.headers) {
+  
+  const  defaultHeaders = getHeadersSchema(request?.requestType)?.safeParse(
+    {}
+  ).data || {}
+  // if headers are empty fill headers
+  if (
+    !request?.headers?.find((header) => {
+      return Object.keys(header).includes("key");
+    })
+  ) {
+    Object.keys(defaultHeaders).forEach((headerKey, index) => {
+      request.headers.push({
+        key: headerKey,
+        value: defaultHeaders[headerKey],
+      });
+    });
+  }
+  // }
+
   const markers = [];
   return json({
     request,
@@ -90,7 +112,6 @@ export default function RequestElement() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const bodySchema = getBodySchema(request?.requestType);
-
 
   const activeTab = searchParams.get("activeTab");
   if (!requestId || !request) {
@@ -158,7 +179,7 @@ export default function RequestElement() {
       >
         {/* https://stackoverflow.com/a/51507806 */}
         <button type="submit" disabled style={{ display: "none" }}></button>
-        <h2 className="mb-2 font-semibold">Context Keys</h2>
+        <h2 className="mb-2 font-semibold">Request Payload</h2>
         <div className="tabs ">
           <Tab to="?activeTab=ctx" isActive={activeTab === "ctx" || !activeTab}>
             CTX
@@ -169,8 +190,8 @@ export default function RequestElement() {
           <Tab to="?activeTab=cqp" isActive={activeTab === "cqp"}>
             Query Params
           </Tab>
-          <Tab to="?activeTab=ch" isActive={activeTab === "ch"}>
-            Custom Headers
+          <Tab to="?activeTab=headers" isActive={activeTab === "headers"}>
+            Headers
           </Tab>
           <Tab to="?activeTab=body" isActive={activeTab === "body"}>
             Body
@@ -178,28 +199,33 @@ export default function RequestElement() {
         </div>
         {(activeTab === "ctx" || !activeTab) && (
           <>
-            <CtxFieldPairs
+            <FieldPairs
               index={0}
+              prefix="ctx"
               defaultKeyValue={request?.ctx && request?.ctx[0].key}
               defaultValueValue={request?.ctx && request?.ctx[0].value}
             />
-            <CtxFieldPairs
+            <FieldPairs
               index={1}
+              prefix="ctx"
               defaultKeyValue={request?.ctx && request?.ctx[1].key}
               defaultValueValue={request?.ctx && request?.ctx[1].value}
             />
-            <CtxFieldPairs
+            <FieldPairs
               index={2}
+              prefix="ctx"
               defaultKeyValue={request?.ctx && request?.ctx[2].key}
               defaultValueValue={request?.ctx && request?.ctx[2].value}
             />
-            <CtxFieldPairs
+            <FieldPairs
               index={3}
+              prefix="ctx"
               defaultKeyValue={request?.ctx && request?.ctx[3].key}
               defaultValueValue={request?.ctx && request?.ctx[3].value}
             />
-            <CtxFieldPairs
+            <FieldPairs
               index={4}
+              prefix="ctx"
               defaultKeyValue={request?.ctx && request?.ctx[4].key}
               defaultValueValue={request?.ctx && request?.ctx[4].value}
             />
@@ -231,6 +257,16 @@ export default function RequestElement() {
               </div>
             </div>
           </div>
+        )}
+        {(activeTab === "headers" || !activeTab) && (
+          <>
+            <FieldPairs
+              index={0}
+              prefix="headers"
+              defaultKeyValue={request?.headers && request?.headers[0]?.key}
+              defaultValueValue={request?.headers && request?.headers[0]?.value}
+            />
+          </>
         )}
       </fetcher.Form>
       <Outlet />

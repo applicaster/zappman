@@ -60,7 +60,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
   request.headers = request?.headers || [];
 
-  // if (request?.headers) {
 
   const defaultHeaders =
     getHeadersSchema(request?.requestType)?.safeParse({}).data || {};
@@ -106,6 +105,7 @@ export default function RequestElement() {
   const { request, defaultBody }: any = useLoaderData() as {
     request: RequestItem;
   };
+  console.log(request)
   const fetcher = useFetcher();
 
   const location = useLocation();
@@ -257,7 +257,7 @@ export default function RequestElement() {
             </div>
           </div>
         )}
-        {(activeTab === "headers" || !activeTab) && (
+        {(activeTab === "headers") && (
           <>
             <FieldPairs
               index={0}

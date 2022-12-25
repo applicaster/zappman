@@ -85,7 +85,7 @@ export default function Root() {
             <Link to={"/"}>Pipes2 Debugging Tool (alpha)</Link>
           </div>
         </header>
-        <div id="menu" className="grid-item flex flex-col overflow-y-auto">
+        <div id="menu" className="grid-item flex flex-col ">
           <div className="text-right p-2 border-b-2">
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
@@ -122,7 +122,7 @@ export default function Root() {
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
           </div>
-          <div>
+          <div className="overflow-y-auto">
             <Menu data={loaderData} />
           </div>
         </div>

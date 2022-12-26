@@ -19,9 +19,6 @@ const itemSchema = menuItemSchema.extend({
 });
 
 const folderSchema = menuItemSchema.extend({
-  // label: z.string(),
-  // id: z.string(),
-  // isActive: z.boolean().optional(),
   isFolder: z.literal(true),
   children: z.array(itemSchema),
 });

@@ -86,7 +86,7 @@ export default function ResponseElement() {
 
   return (
     <>
-      <div className="response-info grid-item  flex items-center justify-between px-2">
+      <div className="response-info grid-item  flex items-center justify-between p-2">
         <div
           className={`badge badge-${
             response && response.status && response.status < 300

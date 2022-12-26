@@ -52,3 +52,9 @@ header {
 .response-details {
   grid-area: responseDetails;
 }
+
+
+[data-theme="lofi"] .input-disabled, .input[disabled] {
+  border-color: rgba(0, 0, 0, 0.2);
+  color:rgb(193, 192, 192)
+}

@@ -1,3 +1,8 @@
+function disabledByKey(key?:string) {
+  if (!key) return false;
+  return ['Content-Type'].includes(key)
+}
+
 export default function FieldPairs({
   index,
   defaultKeyValue,
@@ -16,6 +21,7 @@ export default function FieldPairs({
           <span className="label-text">Key</span>
         </label>
         <input
+          disabled={disabledByKey(defaultKeyValue)}
           name={`${prefix}.${index}.key`}
           defaultValue={defaultKeyValue}
           type="text"
@@ -30,6 +36,7 @@ export default function FieldPairs({
         <label className="input-group">
           <input
             name={`${prefix}.${index}.value`}
+            disabled={disabledByKey(defaultKeyValue)}
             defaultValue={defaultValueValue}
             type="text"
             placeholder="Type here"

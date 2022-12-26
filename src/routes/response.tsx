@@ -4,9 +4,8 @@ import { z } from "zod";
 import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { getResponse, responseSchema } from "../models/responses";
 import { getRequest, requestSchema } from "../models/requests";
-import { schema as contentFeedSchema } from "../validators/contentFeed";
 import TimeAgo from "../components/time-ago";
-
+import { getResponseSchema } from "../utils";
 
 async function init({ json, schema }: { json: any; schema: any }) {
   const stringifiedJson = JSON.stringify(json, null, 2);
@@ -53,6 +52,7 @@ async function init({ json, schema }: { json: any; schema: any }) {
   return { markers: [], stringifiedJson };
 }
 
+
 export async function loader({ params }: LoaderFunctionArgs) {
   const { requestId, responseId } = z
     .object({ requestId: z.string(), responseId: z.string() })
@@ -61,7 +61,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const response = responseSchema.parse(await getResponse(responseId));
   const { markers, stringifiedJson } = await init({
     json: response?.data ?? {},
-    schema: contentFeedSchema,
+    schema: getResponseSchema(requestType),
   });
   return json({
     markers,
@@ -75,6 +75,14 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export default function ResponseElement() {
   const loaderData: any = useLoaderData();
   const response = responseSchema.parse(loaderData.response);
+  let errorMessage;
+  if (response?.error) {
+    errorMessage = response?.error;
+  }
+  if (errorMessage === "Failed to fetch") {
+    errorMessage =
+      "Please check your server connection or check for CORS issues.";
+  }
 
   return (
     <>
@@ -95,12 +103,16 @@ export default function ResponseElement() {
         </div>
       </div>
       <div className="response-details grid-item">
-        {response?.error ? (
-          <div className="p-2">Error: {response?.error}</div>
+        {errorMessage ? (
+          <div className="p-2 text-red-500">Error: {errorMessage}</div>
         ) : (
           <Editor
             key={loaderData?.responseId}
-            options={{ readOnly: true, renderValidationDecorations: "on" }}
+            options={{
+              readOnly: true,
+              renderValidationDecorations: "on",
+              wordWrap: "on",
+            }}
             onMount={(editor, monaco) => {
               const model = editor.getModel();
               if (!model) return;

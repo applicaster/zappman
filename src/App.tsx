@@ -1,4 +1,10 @@
-import { createBrowserRouter, RouterProvider, Route, useRouteError } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  useRouteError,
+  redirect,
+} from "react-router-dom";
 
 import "./App.css";
 import Root, {
@@ -12,13 +18,14 @@ import RequestElement, {
 import ResponseElement, { loader as responseLoader } from "./routes/response";
 import EmptyRequest from "./routes/empty-request";
 import EmptyResponse from "./routes/empty-response";
-
+import { deleteFolder, renameFolder } from "./routes/api/folder";
+import { deleteRequest, renameRequest } from "./routes/api/request";
 
 function ErrorBoundary() {
   let error = useRouteError();
   console.error(error);
   // Uncaught ReferenceError: path is not defined
-  return <div>Dang!</div>;
+  return <div className="p-2">An unexpected error happened.</div>;
 }
 
 const router = createBrowserRouter([
@@ -29,6 +36,22 @@ const router = createBrowserRouter([
     action: rootAction,
     children: [
       { index: true, element: <EmptyRequest /> },
+      {
+        path: "api/delete-folder",
+        action: deleteFolder,
+      },
+      {
+        path: "api/rename-folder",
+        action: renameFolder,
+      },
+      {
+        path: "api/rename-request",
+        action: renameRequest,
+      },
+      {
+        path: "api/delete-request",
+        action: deleteRequest,
+      },
       {
         path: "requests/:requestId",
         element: <RequestElement />,

@@ -1,11 +1,18 @@
-export default function ctxFieldPairs({
+function disabledByKey(key?:string) {
+  if (!key) return false;
+  return ['Content-Type'].includes(key)
+}
+
+export default function FieldPairs({
   index,
   defaultKeyValue,
   defaultValueValue,
+  prefix
 }: {
   index: number;
   defaultKeyValue?: string;
   defaultValueValue?: string;
+  prefix: string
 }) {
   return (
     <div className="flex gap-4">
@@ -14,7 +21,8 @@ export default function ctxFieldPairs({
           <span className="label-text">Key</span>
         </label>
         <input
-          name={`ctx.${index}.key`}
+          disabled={disabledByKey(defaultKeyValue)}
+          name={`${prefix}.${index}.key`}
           defaultValue={defaultKeyValue}
           type="text"
           placeholder="Type here"
@@ -27,7 +35,8 @@ export default function ctxFieldPairs({
         </label>
         <label className="input-group">
           <input
-            name={`ctx.${index}.value`}
+            name={`${prefix}.${index}.value`}
+            disabled={disabledByKey(defaultKeyValue)}
             defaultValue={defaultValueValue}
             type="text"
             placeholder="Type here"

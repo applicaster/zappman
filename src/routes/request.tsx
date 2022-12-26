@@ -182,12 +182,12 @@ export default function RequestElement() {
           <Tab to="?activeTab=ctx" isActive={activeTab === "ctx" || !activeTab}>
             CTX
           </Tab>
-          <Tab to="?activeTab=bt" isActive={activeTab === "bt"}>
+          {/* <Tab to="?activeTab=bt" isActive={activeTab === "bt"}>
             Bearer Token
-          </Tab>
-          <Tab to="?activeTab=cqp" isActive={activeTab === "cqp"}>
+          </Tab> */}
+          {/* <Tab to="?activeTab=cqp" isActive={activeTab === "cqp"}>
             Query Params
-          </Tab>
+          </Tab> */}
           <Tab to="?activeTab=headers" isActive={activeTab === "headers"}>
             Headers
           </Tab>

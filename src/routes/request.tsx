@@ -53,22 +53,11 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const request: any = await getRequest(requestId);
   // After a request is deleted
   if (!request) return redirect("/");
-  // const bodySchema = getBodySchema(request?.requestType);
-  // const defaultBody = bodySchema
-  //   ? JSON.stringify(
-  //       getBodySchema(request?.requestType).safeParse(
-  //         getDefaultBody(request?.requestType)
-  //       ).data,
-  //       null,
-  //       2
-  //     )
-  //   : "";
+  
 
   const markers: any = [];
   return json({
     request,
-    // defaultBody,
-    // bodySchema,
     markers,
     requestType: request?.requestType,
   });

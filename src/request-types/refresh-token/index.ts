@@ -38,7 +38,3 @@ export const responseSchema = z
       fieldErrors: z.object({}).optional(),
     })
   );
-
-export const headersSchema = z.object({
-  "Content-Type": z.literal("application/json").default("application/json"),
-});

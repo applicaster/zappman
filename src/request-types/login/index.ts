@@ -45,6 +45,3 @@ export const responseSchema = z
     })
   );
 
-export const headersSchema = z.object({
-  "Content-Type": z.literal("application/json").default("application/json"),
-});

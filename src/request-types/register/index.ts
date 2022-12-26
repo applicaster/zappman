@@ -9,15 +9,6 @@ export const bodySchema = z.object({
   approveMarketing: z.nullable(z.literal("on")).default("on"),
 });
 
-// export const defaultBody = {
-//   firstName: "firstName",
-//   lastName: "lastName",
-//   email: "user@example.com",
-//   password: "password",
-//   approveTermsOfUse: "on",
-//   approveMarketing: "on",
-// };
-
 export const responseSchema = z
   .object({
     access_token: z.string(),
@@ -30,10 +21,6 @@ export const responseSchema = z
       fieldErrors: z.object({}).optional(),
     })
   );
-
-export const headersSchema = z.object({
-  "Content-Type": z.literal("application/json").default("application/json"),
-});
 
 export const defaultRequest = {
   requestType: "register",

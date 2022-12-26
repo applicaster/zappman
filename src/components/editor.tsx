@@ -125,6 +125,7 @@ export default function ({
         lineNumbers: "off",
         lineDecorationsWidth: 0,
         lineNumbersMinChars: 0,
+        wordWrap: "on",
       }}
       defaultValue={defaultValue}
     />

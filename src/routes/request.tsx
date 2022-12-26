@@ -211,7 +211,7 @@ export default function RequestElement() {
                 <span className="label-text">JSON Body</span>
               </label>
 
-              <div className="h-52">
+              <div className="h-80">
                 <Editor
                   defaultValue={request?.body}
                   validationSchema={bodySchema}

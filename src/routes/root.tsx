@@ -82,7 +82,7 @@ export default function Root() {
       <div id="app" className={`bg-base-100`}>
         <header className="grid-item p-2  flex justify-between">
           <div className="font-bold">
-            <Link to={"/"}>Pipes2 Debugging Tool (alpha)</Link>
+            <Link to={"/"}>Pipes2 Debugging Tool (Alpha)</Link>
           </div>
         </header>
         <div id="menu" className="grid-item flex flex-col ">

@@ -17,7 +17,7 @@ import { z } from "zod";
 import FieldPairs from "../components/field-pairs";
 import { getRequest, RequestItem, updateRequest } from "../models/requests";
 import { createResponse, getLatestResponse } from "../models/responses";
-import { getBodySchema, getHeadersSchema } from "../utils";
+import { getBodySchema } from "../utils";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const requestId = z.string().parse(params.requestId);
@@ -53,36 +53,22 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const request: any = await getRequest(requestId);
   // After a request is deleted
   if (!request) return redirect("/");
-  const bodySchema = getBodySchema(request?.requestType);
-  const defaultBody = bodySchema
-    ? JSON.stringify(getBodySchema(request?.requestType).safeParse({}).data, null, 2)
-    : "";
-
-  request.headers = request?.headers || [];
-
-
-  const defaultHeaders =
-    getHeadersSchema(request?.requestType)?.safeParse({}).data || {};
-  // if headers are empty fill headers
-  if (
-    !request?.headers?.find((header: any) => {
-      return Object.keys(header).includes("key");
-    })
-  ) {
-    Object.keys(defaultHeaders).forEach((headerKey, index) => {
-      request.headers.push({
-        key: headerKey,
-        value: defaultHeaders[headerKey],
-      });
-    });
-  }
-  // }
+  // const bodySchema = getBodySchema(request?.requestType);
+  // const defaultBody = bodySchema
+  //   ? JSON.stringify(
+  //       getBodySchema(request?.requestType).safeParse(
+  //         getDefaultBody(request?.requestType)
+  //       ).data,
+  //       null,
+  //       2
+  //     )
+  //   : "";
 
   const markers: any = [];
   return json({
     request,
-    defaultBody,
-    bodySchema,
+    // defaultBody,
+    // bodySchema,
     markers,
     requestType: request?.requestType,
   });
@@ -102,7 +88,7 @@ const Tab = ({ isActive, to, children, isDisabled }: any) => {
 
 export default function RequestElement() {
   const { requestId } = useParams();
-  const { request, defaultBody }: any = useLoaderData() as {
+  const { request }: any = useLoaderData() as {
     request: RequestItem;
   };
   const fetcher = useFetcher();
@@ -236,9 +222,9 @@ export default function RequestElement() {
                 <span className="label-text">JSON Body</span>
               </label>
 
-              <div className="h-36">
+              <div className="h-52">
                 <Editor
-                  defaultValue={request?.body || defaultBody}
+                  defaultValue={request?.body}
                   validationSchema={bodySchema}
                   onchange={(value: string) => {
                     fetcher.submit(
@@ -256,13 +242,19 @@ export default function RequestElement() {
             </div>
           </div>
         )}
-        {(activeTab === "headers") && (
+        {activeTab === "headers" && (
           <>
             <FieldPairs
               index={0}
               prefix="headers"
               defaultKeyValue={request?.headers && request?.headers[0]?.key}
               defaultValueValue={request?.headers && request?.headers[0]?.value}
+            />
+            <FieldPairs
+              index={1}
+              prefix="headers"
+              defaultKeyValue={request?.headers && request?.headers[1]?.key}
+              defaultValueValue={request?.headers && request?.headers[1]?.value}
             />
           </>
         )}

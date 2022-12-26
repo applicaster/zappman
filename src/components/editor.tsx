@@ -44,6 +44,7 @@ export async function createMarkers({
     offset: number;
     length: number;
   }[] = [];
+  
   if (!parsed.success) {
     markers = parsed.error.issues.map((issue: any) => {
       const path = issue.path;

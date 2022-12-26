@@ -25,7 +25,7 @@ function ErrorBoundary() {
   let error = useRouteError();
   console.error(error);
   // Uncaught ReferenceError: path is not defined
-  return <div>Dang!</div>;
+  return <div className="p-2">An unexpected error happened.</div>;
 }
 
 const router = createBrowserRouter([
@@ -38,19 +38,19 @@ const router = createBrowserRouter([
       { index: true, element: <EmptyRequest /> },
       {
         path: "api/delete-folder",
-        action: deleteFolder
+        action: deleteFolder,
       },
       {
         path: "api/rename-folder",
-        action: renameFolder
+        action: renameFolder,
       },
       {
         path: "api/rename-request",
-        action: renameRequest
+        action: renameRequest,
       },
       {
         path: "api/delete-request",
-        action: deleteRequest
+        action: deleteRequest,
       },
       {
         path: "requests/:requestId",

@@ -1,44 +1,51 @@
-import { bodySchema, headersSchema } from "./request-types/login";
+import { responseSchema as contentFeedResponseSchema } from "./request-types/content-feed";
+import {
+  bodySchema as loginBodySchema,
+  responseSchema as loginResponseSchema,
+  defaultRequest as loginDefaultRequest
+} from "./request-types/login";
+import {
+  bodySchema as registerBodySchema,
+  responseSchema as registerResponseSchema,
+  defaultRequest as registerDefaultRequest
+} from "./request-types/register";
 
-const mapper:any = {
-  login: {
-    bodySchema: bodySchema,
-    headersSchema: headersSchema
+import {
+  bodySchema as refreshBodySchema,
+  responseSchema as refreshResponseSchema,
+  defaultRequest as refreshDefaultRequest
+} from "./request-types/refresh-token"
+
+const mapper: any = {
+  contentFeed: {
+    responseSchema: contentFeedResponseSchema,
   },
+  login: {
+    bodySchema: loginBodySchema,
+    responseSchema: loginResponseSchema,
+    defaultRequest: loginDefaultRequest
+  },
+  register: {
+    bodySchema: registerBodySchema,
+    responseSchema: registerResponseSchema,
+    defaultRequest: registerDefaultRequest
+  },
+  refreshToken: {
+    bodySchema: refreshBodySchema,
+    responseSchema: refreshResponseSchema,
+    defaultRequest: refreshDefaultRequest 
+  }
 };
 
-export function getBodySchema(requestType:string) {
+export function getBodySchema(requestType: string) {
   return mapper[requestType]?.bodySchema;
 }
 
-export function getHeadersSchema(requestType:string) {
-  return mapper[requestType]?.headersSchema;
+export function getResponseSchema(requestType: string) {
+  return mapper[requestType]?.responseSchema;
 }
 
-// export function mountMarkers(markers) {
-//   return (editor, monaco) => {
-//     const model = editor.getModel();
-//     if (!model) return;
-//     monaco.editor.setModelMarkers(
-//       model,
-//       "owner",
-//       markers.map(({ message, offset, length }: any) => {
-//         return {
-//           message,
-//           severity: monaco.MarkerSeverity.Error,
-//           startLineNumber: model.getPositionAt(offset).lineNumber,
-//           endLineNumber: model.getPositionAt(offset).lineNumber,
-//           startColumn: model.getPositionAt(offset).column,
-//           endColumn: model.getPositionAt(offset).column + length + 2,
-//         };
-//       }) || []
-//     );
-//     if (markers.length > 0) {
-//       editor.trigger("", "editor.action.marker.next", {});
-//     }
-//   };
-// }
-
-// export function validateMarkers(markers) {
-
-// }
+export function getDefaultRequest(requestType: string) {
+  return mapper[requestType]?.defaultRequest;
+ 
+}

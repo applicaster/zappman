@@ -1,5 +1,4 @@
 - Make sure all responses of a delete requests are being deleted
-- Body as monaco + validation
 - Add help text 
 - Plugable Requests types
   - Each will have

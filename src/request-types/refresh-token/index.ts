@@ -1,13 +1,12 @@
 import { z } from "zod";
 
 export const bodySchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
+  refresh_token: z.string()
 });
 
 export const defaultRequest = {
-  requestType: "login",
-  title: "Login",
+  requestType: "refreshToken",
+  title: "Refresh Token",
   headers: [
     { key: "Content-Type", value: "application/json" },
     {},
@@ -19,18 +18,13 @@ export const defaultRequest = {
   method: "POST",
   body: JSON.stringify(
     {
-      email: "user@example.com",
-      password: "password",
+      refresh_token: "token",
     },
     null,
     2
   ),
 };
 
-// export const defaultBody = {
-//   email: "user@example.com",
-//   password: "password",
-// };
 
 export const responseSchema = z
   .object({

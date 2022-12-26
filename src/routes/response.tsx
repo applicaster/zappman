@@ -4,8 +4,8 @@ import { z } from "zod";
 import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { getResponse, responseSchema } from "../models/responses";
 import { getRequest, requestSchema } from "../models/requests";
-import { schema as contentFeedSchema } from "../validators/contentFeed";
 import TimeAgo from "../components/time-ago";
+import { getResponseSchema } from "../utils";
 
 async function init({ json, schema }: { json: any; schema: any }) {
   const stringifiedJson = JSON.stringify(json, null, 2);
@@ -52,14 +52,6 @@ async function init({ json, schema }: { json: any; schema: any }) {
   return { markers: [], stringifiedJson };
 }
 
-const schemaByType = {
-  contentFeed: contentFeedSchema,
-  login: z.object({
-    access_token: z.string(),
-    refresh_token: z.string(),
-    expires_in: z.number(),
-  }),
-};
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { requestId, responseId } = z
@@ -69,7 +61,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const response = responseSchema.parse(await getResponse(responseId));
   const { markers, stringifiedJson } = await init({
     json: response?.data ?? {},
-    schema: schemaByType[requestType],
+    schema: getResponseSchema(requestType),
   });
   return json({
     markers,
@@ -85,10 +77,11 @@ export default function ResponseElement() {
   const response = responseSchema.parse(loaderData.response);
   let errorMessage;
   if (response?.error) {
-    errorMessage =  response?.error
+    errorMessage = response?.error;
   }
-  if (errorMessage === 'Failed to fetch') {
-    errorMessage =  "Please check your server connection or check for CORS issues." 
+  if (errorMessage === "Failed to fetch") {
+    errorMessage =
+      "Please check your server connection or check for CORS issues.";
   }
 
   return (
@@ -111,7 +104,6 @@ export default function ResponseElement() {
       </div>
       <div className="response-details grid-item">
         {errorMessage ? (
-          
           <div className="p-2 text-red-500">Error: {errorMessage}</div>
         ) : (
           <Editor

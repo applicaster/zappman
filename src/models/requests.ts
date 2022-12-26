@@ -2,13 +2,14 @@ import localforage, { keys } from "localforage";
 import { applyPatch } from "fast-json-patch";
 import { nanoid } from "nanoid";
 import { z } from "zod";
+import { getDefaultRequest } from "../utils";
 
 export const requestSchema = z.object({
   id: z.string(),
   url: z.string().optional(),
   method: z.enum(["GET", "POST"]).optional(),
   body: z.string().optional(),
-  requestType: z.enum(["contentFeed", "login"]),
+  requestType: z.enum(["contentFeed", "login", "register", "refreshToken"]),
   title: z.string().optional(),
   folderId: z.string().optional(),
   createdAt: z.number(),
@@ -60,12 +61,12 @@ export async function createRequests(requestsType: any) {
     });
     return Promise.all(
       [
-        { requestType: "login", title: "Login" },
-        { requestType: "register", title: "Register" },
+        getDefaultRequest("login"),
+        getDefaultRequest("register"),
+        getDefaultRequest("refreshToken"),
         { requestType: "resetPassword", title: "Reset Password" },
-        { requestType: "refreshToken", title: "Refresh Token" },
         { requestType: "deleteAccount", title: "Delete Account" },
-      ].map(async ({ requestType, title }) => {
+      ].map(async ({ requestType, title, headers, body, method, ctx }) => {
         const id = nanoid(9);
         await requestsStore.setItem(id, {
           id,
@@ -73,7 +74,10 @@ export async function createRequests(requestsType: any) {
           createdAt: Date.now(),
           requestType,
           folderId,
-          method: "POST",
+          method,
+          headers: headers || [{}, {}, {}, {}, {}, {}],
+          body,
+          ctx: ctx || [{}, {}, {}, {}, {}, {}],
         });
       })
     );

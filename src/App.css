@@ -17,10 +17,11 @@ body {
 
   grid-template-areas:
     "header header header"
-    "menu requestUrl responseInfo"
+    "menu requestUrl requestUrl"
+    "menu requestDetails responseInfo"
     "menu requestDetails responseDetails";
   grid-template-columns: 2fr 5fr 6fr;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto auto 1fr;
 }
 
 .grid-item {

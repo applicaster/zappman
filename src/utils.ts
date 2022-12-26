@@ -16,6 +16,18 @@ import {
   defaultRequest as refreshDefaultRequest
 } from "./request-types/refresh-token"
 
+
+import {
+  bodySchema as resetBodySchema,
+  responseSchema as resetResponseSchema,
+  defaultRequest as resetDefaultRequest
+} from "./request-types/reset-password"
+
+import {
+  responseSchema as deleteResponseSchema,
+  defaultRequest as deleteDefaultRequest
+} from "./request-types/delete-account"
+
 const mapper: any = {
   contentFeed: {
     responseSchema: contentFeedResponseSchema,
@@ -34,6 +46,15 @@ const mapper: any = {
     bodySchema: refreshBodySchema,
     responseSchema: refreshResponseSchema,
     defaultRequest: refreshDefaultRequest 
+  },
+  resetPassword: {
+    bodySchema: resetBodySchema,
+    responseSchema: resetResponseSchema,
+    defaultRequest: resetDefaultRequest  
+  },
+  deleteAccount: {
+    responseSchema: deleteResponseSchema,
+    defaultRequest: deleteDefaultRequest  
   }
 };
 

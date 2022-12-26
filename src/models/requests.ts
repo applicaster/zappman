@@ -9,7 +9,14 @@ export const requestSchema = z.object({
   url: z.string().optional(),
   method: z.enum(["GET", "POST"]).optional(),
   body: z.string().optional(),
-  requestType: z.enum(["contentFeed", "login", "register", "refreshToken"]),
+  requestType: z.enum([
+    "contentFeed",
+    "login",
+    "register",
+    "refreshToken",
+    "resetPassword",
+    "deleteAccount",
+  ]),
   title: z.string().optional(),
   folderId: z.string().optional(),
   createdAt: z.number(),
@@ -64,8 +71,8 @@ export async function createRequests(requestsType: any) {
         getDefaultRequest("login"),
         getDefaultRequest("register"),
         getDefaultRequest("refreshToken"),
-        { requestType: "resetPassword", title: "Reset Password" },
-        { requestType: "deleteAccount", title: "Delete Account" },
+        getDefaultRequest("resetPassword"),
+        getDefaultRequest("deleteAccount"),
       ].map(async ({ requestType, title, headers, body, method, ctx }) => {
         const id = nanoid(9);
         await requestsStore.setItem(id, {

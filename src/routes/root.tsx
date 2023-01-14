@@ -21,6 +21,8 @@ import {
 } from "../models/requests";
 import Menu, { dataSchema } from "../components/menu";
 
+import { requests } from "../requests-declare";
+
 const itemMapper = (item: any) => ({
   id: item.id,
   label: item.title || "New Request",
@@ -45,13 +47,13 @@ export async function loader() {
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const actionType = formData.get("action-type");
-  if (actionType === "add-feed") {
-    const req = await createRequest("contentFeed");
+  const itemType = formData.get("item-type");
+  if (itemType === "request") {
+    const req = await createRequest(actionType);
     return redirect(`/requests/${req.id}`);
   }
-  if (actionType === "add-login-requests") {
-    console.log("add-login-requests");
-    const [firstReq] = await createRequests("login");
+  if (itemType === "folder") {
+    const [firstReq] = await createRequests(actionType);
     return redirect("/");
   }
   if (actionType === "update") {
@@ -73,7 +75,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Root() {
   const loaderData = dataSchema.parse(useLoaderData());
-
   // const { pathname } = useLocation();
   // const submit = useSubmit();
   const fetcher = useFetcher();
@@ -96,28 +97,20 @@ export default function Root() {
                   align="end"
                   className=" bg-white border py-1 mt-1 w-40 rounded-md  shadow-lg focus:outline-none flex flex-col"
                 >
-                  <DropdownMenu.Item
-                    onClick={() => {
-                      let formData = new FormData();
-                      formData.append("action-type", "add-feed");
-
-                      fetcher.submit(formData, { method: "post" });
-                    }}
-                    className="py-2 px-4 w-full text-xs text-left cursor-pointer hover:bg-slate-300"
-                  >
-                    Feed
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    onClick={() => {
-                      let formData = new FormData();
-                      formData.append("action-type", "add-login-requests");
-
-                      fetcher.submit(formData, { method: "post" });
-                    }}
-                    className="py-2 px-4 w-full text-xs text-left cursor-pointer hover:bg-slate-300"
-                  >
-                    Login Flow Requests
-                  </DropdownMenu.Item>
+                  {requests.items.map((item: any) => (
+                     <DropdownMenu.Item
+                     onClick={() => {
+                       let formData = new FormData();
+                       formData.append("action-type", item.info.id);
+                       formData.append("item-type", item.info.type);
+                       fetcher.submit(formData, { method: "post" });
+                     }}
+                     className="py-2 px-4 w-full text-xs text-left cursor-pointer hover:bg-slate-300"
+                     key={item.info.id}
+                   >
+                    {item.info.label}
+                   </DropdownMenu.Item>
+                  ))}
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>

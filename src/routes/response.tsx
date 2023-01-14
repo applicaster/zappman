@@ -59,9 +59,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
     .parse(params);
   const { requestType } = requestSchema.parse(await getRequest(requestId));
   const response = responseSchema.parse(await getResponse(responseId));
+  const schema = await getResponseSchema(requestType);
   const { markers, stringifiedJson } = await init({
     json: response?.data ?? {},
-    schema: getResponseSchema(requestType),
+    schema,
   });
   return json({
     markers,

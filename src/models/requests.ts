@@ -3,20 +3,14 @@ import { applyPatch } from "fast-json-patch";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { getDefaultRequest } from "../utils";
+import { requests } from "../requests-declare";
 
 export const requestSchema = z.object({
   id: z.string(),
   url: z.string().optional(),
   method: z.enum(["GET", "POST"]).optional(),
   body: z.string().optional(),
-  requestType: z.enum([
-    "contentFeed",
-    "login",
-    "register",
-    "refreshToken",
-    "resetPassword",
-    "deleteAccount",
-  ]),
+  requestType: z.string(),
   title: z.string().optional(),
   folderId: z.string().optional(),
   createdAt: z.number(),
@@ -47,7 +41,8 @@ const foldersStore = localforage.createInstance({
   name: "folders",
 });
 
-export async function createRequest(requestType: "contentFeed") {
+export async function createRequest(requestType: any) {
+  const request = requests.items.find((item: any) => item.info.id == requestType);
   const id = nanoid(9);
   return requestsStore.setItem(id, {
     id,
@@ -58,38 +53,36 @@ export async function createRequest(requestType: "contentFeed") {
 }
 
 export async function createRequests(requestsType: any) {
-  if (requestsType === "login") {
-    const folderId = nanoid(9);
-    await foldersStore.setItem(folderId, {
-      id: folderId,
-      requestsType,
-      title: "Login Flow Requests",
-      createdAt: Date.now(),
-    });
-    return Promise.all(
-      [
-        getDefaultRequest("login"),
-        getDefaultRequest("register"),
-        getDefaultRequest("refreshToken"),
-        getDefaultRequest("resetPassword"),
-        getDefaultRequest("deleteAccount"),
-      ].map(async ({ requestType, title, headers, body, method, ctx }) => {
-        const id = nanoid(9);
-        await requestsStore.setItem(id, {
-          id,
-          title,
-          createdAt: Date.now(),
-          requestType,
-          folderId,
-          method,
-          headers: headers || [{}, {}, {}, {}, {}, {}],
-          body,
-          ctx: ctx || [{}, {}, {}, {}, {}, {}],
-        });
-      })
-    );
-  }
-  return [];
+  const request = requests.items.find((item: any) => item.info.id == requestsType)
+  if (!request) return [];
+
+  const folderId = nanoid(9);
+  await foldersStore.setItem(folderId, {
+    id: folderId,
+    requestsType,
+    title: request.info.label,
+    createdAt: Date.now(),
+  });
+
+  const requestsArray = request.requests.map((item: any) => { return getDefaultRequest(item.id) });
+  const results = await Promise.all(requestsArray)
+
+  return Promise.all(
+    results.map(async ({ requestType, title, headers, body, method, ctx }: { requestType: string, title: string, headers: any, body: any, method: string, ctx: any }) => {
+      const id = nanoid(9);
+      await requestsStore.setItem(id, {
+        id,
+        title,
+        createdAt: Date.now(),
+        requestType,
+        folderId,
+        method,
+        headers: headers || [{}, {}, {}, {}, {}, {}],
+        body,
+        ctx: ctx || [{}, {}, {}, {}, {}, {}],
+      });
+    })
+  );
 }
 
 export async function getRequest(requestId: string) {

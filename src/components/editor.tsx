@@ -38,14 +38,13 @@ export async function createMarkers({
 }) {
   const parsedJson = parseTree(json);
   if (!json || !parsedJson) throw new Error("Not a valid JSON");
-
   const parsed = await schema.safeParseAsync(JSON.parse(json));
   let markers: {
     message: string;
     offset: number;
     length: number;
   }[] = [];
-
+  
   if (!parsed.success) {
     markers = parsed.error.issues.map((issue: any) => {
       const path = issue.path;

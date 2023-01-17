@@ -55,9 +55,8 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const request: any = await getRequest(requestId);
   // After a request is deleted
   if (!request) return redirect("/");
+  
   bodySchema = (generatedRequests as any)[request.requestType].bodySchema;;
-
-  // bodySchema = schemas[`${request?.requestType.toString}`].bodySchema;
   const markers: any = [];
 
   return json({

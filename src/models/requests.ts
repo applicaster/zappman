@@ -2,7 +2,7 @@ import localforage, { keys } from "localforage";
 import { applyPatch } from "fast-json-patch";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-import { getDefaultRequest } from "../utils";
+import * as generatedRequests from "../../tools/auto-generated-requests/requests"
 import { requests } from "../requests-declare";
 
 export const requestSchema = z.object({
@@ -64,11 +64,12 @@ export async function createRequests(requestsType: any) {
     createdAt: Date.now(),
   });
 
-  const requestsArray = request.requests.map((item: any) => { return getDefaultRequest(item.id) });
+  const requestsArray = request.requests.map((item: any) => { return (generatedRequests as any)[item.id].defaultRequest });
   const results = await Promise.all(requestsArray)
 
   return Promise.all(
-    results.map(async ({ requestType, title, headers, body, method, ctx }: { requestType: string, title: string, headers: any, body: any, method: string, ctx: any }) => {
+    results.map(async ({ requestType, title, headers, body, method, ctx }:
+      { requestType: string, title: string, headers: any, body: any, method: string, ctx: any }) => {
       const id = nanoid(9);
       await requestsStore.setItem(id, {
         id,

@@ -17,7 +17,7 @@ import { z } from "zod";
 import FieldPairs from "../components/field-pairs";
 import { getRequest, RequestItem, updateRequest } from "../models/requests";
 import { createResponse, getLatestResponse } from "../models/responses";
-import { getBodySchema } from "../utils";
+import * as generatedRequests from "../../tools/auto-generated-requests/requests"
 
 //TODO: remove this and use better approach then this global
 let bodySchema: any;
@@ -55,8 +55,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const request: any = await getRequest(requestId);
   // After a request is deleted
   if (!request) return redirect("/");
+  bodySchema = (generatedRequests as any)[request.requestType].bodySchema;;
 
-  bodySchema = await getBodySchema(request?.requestType);
+  // bodySchema = schemas[`${request?.requestType.toString}`].bodySchema;
   const markers: any = [];
 
   return json({

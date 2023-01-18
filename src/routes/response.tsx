@@ -5,7 +5,7 @@ import { json, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { getResponse, responseSchema } from "../models/responses";
 import { getRequest, requestSchema } from "../models/requests";
 import TimeAgo from "../components/time-ago";
-import { getResponseSchema } from "../utils";
+import * as generatedRequests from "../../tools/auto-generated-requests/requests"
 
 async function init({ json, schema }: { json: any; schema: any }) {
   const stringifiedJson = JSON.stringify(json, null, 2);
@@ -59,9 +59,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
     .parse(params);
   const { requestType } = requestSchema.parse(await getRequest(requestId));
   const response = responseSchema.parse(await getResponse(responseId));
+  const schema = (generatedRequests as any)[requestType].responseSchema;
   const { markers, stringifiedJson } = await init({
     json: response?.data ?? {},
-    schema: getResponseSchema(requestType),
+    schema,
   });
   return json({
     markers,

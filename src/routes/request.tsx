@@ -17,8 +17,10 @@ import { z } from "zod";
 import FieldPairs from "../components/field-pairs";
 import { getRequest, RequestItem, updateRequest } from "../models/requests";
 import { createResponse, getLatestResponse } from "../models/responses";
-import { getBodySchema } from "../utils";
+import * as generatedRequests from "../../tools/auto-generated-requests/requests"
 
+//TODO: remove this and use better approach then this global
+let bodySchema: any;
 export async function action({ request, params }: ActionFunctionArgs) {
   const requestId = z.string().parse(params.requestId);
 
@@ -54,8 +56,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
   // After a request is deleted
   if (!request) return redirect("/");
   
-
+  bodySchema = (generatedRequests as any)[request.requestType].bodySchema;;
   const markers: any = [];
+
   return json({
     request,
     markers,
@@ -84,8 +87,6 @@ export default function RequestElement() {
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const bodySchema = getBodySchema(request?.requestType);
-
   const activeTab = searchParams.get("activeTab");
   if (!requestId || !request) {
     throw new Error("request item is not set");

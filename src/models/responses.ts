@@ -27,12 +27,13 @@ export async function createResponse(requestId: string) {
     if (!request.url) throw new Error("URL was not set");
     const url = new URL(request.url);
     if (request?.ctx) {
-      const ctxObj = request?.ctx.reduce((item, acc: any) => {
+      const ctxObj = request.ctx.reduce((acc: any, item) => {
         if (item.key) {
           acc[item.key] = item.value;
         }
         return acc;
       }, {});
+
       if (Object.keys(ctxObj).length > 0) {
         url.searchParams.set("ctx", btoa(JSON.stringify(ctxObj)));
       }

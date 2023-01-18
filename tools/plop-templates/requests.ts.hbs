@@ -1,0 +1,11 @@
+// This is an auto generated file. It should be added to .gitignore and shouldn't be edited
+
+{{#each requests}}
+import * as {{camelCase name}} from "../../src/request-types/{{name}}"
+{{/each}}
+
+export {
+    {{#each requests}}
+    {{camelCase name}},
+    {{/each}}
+}
